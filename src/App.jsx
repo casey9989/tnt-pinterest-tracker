@@ -1,0 +1,327 @@
+import { useState, useEffect } from "react";
+
+const BOARDS = [
+  { id: "b_1074812336010491879", name: "Thyme & Tonic Press",     short: "T&T Main"       },
+  { id: "b_1074812336010491880", name: "Bookish sticker ideas",   short: "Bookish"         },
+  { id: "b_1074812336010491881", name: "Cottagecore aesthetic",   short: "Cottagecore"     },
+  { id: "b_1074812336010491882", name: "Dark academia style",     short: "Dark Academia"   },
+  { id: "b_1074812336010491883", name: "Cute animal stickers",    short: "Cute Animals"    },
+  { id: "b_1074812336010491884", name: "Sticker collection inspo",short: "Sticker Inspo"   },
+  { id: "b_1074812336010491885", name: "Journal & planner decor", short: "Journal/Planner" },
+  { id: "b_1074812336010491887", name: "Gifts for Book Lovers",   short: "Book Gifts"      },
+];
+
+const DAY_SLOTS = {
+  0: ["20:01","21:47","22:01","22:51","23:16"],
+  1: ["20:13","21:19","21:40","22:52"],
+  2: ["17:50","21:28","21:46","22:56"],
+  3: ["17:56","22:04","22:58"],
+  4: ["03:22","22:00","22:58"],
+  5: ["11:36","22:13","22:41"],
+  6: ["03:00","11:40","17:38","22:28"],
+};
+
+const STATUSES = [
+  { key:"idea",        label:"Idea",         color:"#a0aec0", bg:"#f7fafc" },
+  { key:"in_progress", label:"In Progress",  color:"#d69e2e", bg:"#fffff0" },
+  { key:"csv_ready",   label:"CSV Ready",    color:"#3182ce", bg:"#ebf8ff" },
+  { key:"scheduled",   label:"Scheduled",    color:"#dd6b20", bg:"#fffaf0" },
+  { key:"live",        label:"Live",         color:"#276749", bg:"#f0fff4" },
+];
+
+const STORAGE_KEY = "thymeandtonic_pinterest_v2";
+
+function fmt(dateObj, timeStr) {
+  const y = dateObj.getFullYear();
+  const m = String(dateObj.getMonth()+1).padStart(2,"0");
+  const d = String(dateObj.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d} ${timeStr}`;
+}
+
+function buildSeedPins(setId, boardIds, startDate, status, mediaUrl, link, description, keywords) {
+  return boardIds.map((boardId, i) => {
+    const d = new Date(startDate + "T00:00:00");
+    d.setDate(d.getDate() + i * 8);
+    const dow = d.getDay();
+    const slots = DAY_SLOTS[dow];
+    const slot = slots[setId % slots.length];
+    return { id:`${setId}-${i}`, boardId, title:"", mediaUrl:mediaUrl||"", link:link||"", description:description||"", keywords:keywords||"", publishDate:fmt(d,slot), status };
+  });
+}
+
+const SEED_SETS = [
+  { id:1, name:"Vintage Suitcases",       pins: buildSeedPins(1,["b_1074812336010491879","b_1074812336010491881","b_1074812336010491884","b_1074812336010491885"],"2025-05-01","live","","https://thymeandtonic.etsy.com","Vintage suitcase watercolor sticker cottagecore travel aesthetic","cottagecore,travel,vintage,sticker,watercolor") },
+  { id:2, name:"Book Dragon",             pins: buildSeedPins(2,["b_1074812336010491880","b_1074812336010491882","b_1074812336010491883","b_1074812336010491887"],"2025-05-10","live","","","","") },
+  { id:3, name:"Reading Frog",            pins: buildSeedPins(3,["b_1074812336010491879","b_1074812336010491880","b_1074812336010491881","b_1074812336010491882"],"2025-05-20","live","","","","") },
+  { id:4, name:"Raccoon with Headphones", pins: buildSeedPins(4,["b_1074812336010491883","b_1074812336010491884","b_1074812336010491885","b_1074812336010491887"],"2025-05-30","live","","","","") },
+  { id:5, name:"Reading Bat",             pins: buildSeedPins(5,["b_1074812336010491879","b_1074812336010491882","b_1074812336010491883","b_1074812336010491884"],"2025-06-10","live","","","","") },
+  { id:6, name:"Scholarly Crow",          pins: buildSeedPins(6,["b_1074812336010491880","b_1074812336010491881","b_1074812336010491885","b_1074812336010491887"],"2025-06-20","live","","","","") },
+  { id:7, name:"Meadow Mouse",            pins: buildSeedPins(7,["b_1074812336010491879","b_1074812336010491882","b_1074812336010491884","b_1074812336010491887"],"2025-07-01","live","","","","") },
+  { id:8, name:"Bat Celestial Set",       pins: buildSeedPins(8,["b_1074812336010491880","b_1074812336010491881","b_1074812336010491882","b_1074812336010491883"],"2025-07-12","scheduled","","","Celestial bat watercolor sticker dark academia witchy aesthetic","darkacademia,celestial,bat,witchy,sticker") },
+  { id:9, name:"Music Highland Cow", pins:[
+    { id:"9-0", boardId:"b_1074812336010491879", title:"Music Highland Cow Sticker · Watercolor Cottagecore Vinyl Die-Cut", mediaUrl:"", link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore", description:"A watercolor highland cow strumming a guitar — this die-cut vinyl sticker is made for cottagecore lovers and music fans. Matte or glossy finish. Perfect for journals laptops and water bottles. Shop Thyme and Tonic Press on Etsy.", keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker", publishDate:"2026-06-12 11:36", status:"csv_ready" },
+    { id:"9-1", boardId:"b_1074812336010491881", title:"Cottagecore Highland Cow with Guitar · Watercolor Sticker", mediaUrl:"", link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore", description:"Soft watercolor illustration of a fluffy highland cow with a guitar. This cottagecore-aesthetic vinyl sticker ships from Thyme and Tonic Press. Matte or glossy finish. Great for planners and journals.", keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker", publishDate:"2026-06-20 11:40", status:"csv_ready" },
+    { id:"9-2", boardId:"b_1074812336010491883", title:"Cute Musical Cow Sticker · Watercolor Animal Vinyl Die-Cut", mediaUrl:"", link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore", description:"Adorable musical highland cow vinyl die-cut sticker! Watercolor art style with a thick white border. Perfect for cute animal sticker collectors. Matte or glossy. Find it in the Thyme and Tonic Press Etsy shop.", keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker", publishDate:"2026-06-28 22:01", status:"csv_ready" },
+    { id:"9-3", boardId:"b_1074812336010491885", title:"Bookish Journal Sticker · Highland Cow Guitarist · Cottagecore", mediaUrl:"", link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore", description:"Dress up your journal or planner with this watercolor highland cow guitarist sticker. Die-cut vinyl with white border. Matte or glossy finish. A cozy cottagecore touch for any sticker collection.", keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker", publishDate:"2026-07-06 22:52", status:"csv_ready" },
+    { id:"9-4", boardId:"b_1074812336010491884", title:"Watercolor Sticker Collection · Music Highland Cow Die-Cut Vinyl", mediaUrl:"", link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore", description:"Add this watercolor highland cow with guitar to your sticker collection! Die-cut vinyl with crisp white border. Matte or glossy. From Thyme and Tonic Press — cottagecore and bookish sticker shop on Etsy.", keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker", publishDate:"2026-07-14 17:50", status:"csv_ready" },
+  ]},
+];
+
+function boardById(id) { return BOARDS.find(b=>b.id===id); }
+function statusObj(key) { return STATUSES.find(s=>s.key===key)||STATUSES[0]; }
+
+function generateSchedule(boardIds, startDate, intervalDays) {
+  return boardIds.map((boardId,i)=>{
+    const base = new Date((startDate||new Date().toISOString().slice(0,10))+"T00:00:00");
+    base.setDate(base.getDate()+i*intervalDays);
+    const dow = base.getDay(); const slots = DAY_SLOTS[dow]; const slot = slots[i%slots.length];
+    return { id:`new-${Date.now()}-${i}`, boardId, title:"", mediaUrl:"", link:"", description:"", keywords:"", publishDate:fmt(base,slot), status:"csv_ready" };
+  });
+}
+
+function csvCell(val) {
+  const s = String(val);
+  if (s.includes(",")||s.includes('"')||s.includes("\n")) return `"${s.replace(/"/g,'""')}"`;
+  return s;
+}
+
+function exportCSV(sets) {
+  const rows=[["Title","Media URL","Pinterest board","Thumbnail","Description","Link","Publish date","Keywords"]];
+  sets.forEach(set=>(set.pins||[]).forEach(pin=>{
+    if(["csv_ready","scheduled"].includes(pin.status)){
+      const board=boardById(pin.boardId);
+      rows.push([csvCell(pin.title||set.name),csvCell(pin.mediaUrl||""),csvCell(board?board.name:""),csvCell(""),csvCell(pin.description||""),csvCell(pin.link||""),csvCell(pin.publishDate||""),csvCell(pin.keywords||"")]);
+    }
+  }));
+  return rows.map(r=>r.join(",")).join("\n");
+}
+
+function downloadCSV(content, filename) {
+  const blob=new Blob([content],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url; a.download=filename; a.click(); URL.revokeObjectURL(url);
+}
+
+function BoardCoverage({sets}) {
+  const counts={}; BOARDS.forEach(b=>counts[b.id]=0);
+  sets.forEach(set=>(set.pins||[]).forEach(pin=>{
+    if(["live","scheduled","csv_ready"].includes(pin.status)) counts[pin.boardId]=(counts[pin.boardId]||0)+1;
+  }));
+  const max=Math.max(...Object.values(counts),1);
+  return (
+    <div style={{background:"#faf7f2",borderRadius:12,padding:"14px 18px",marginBottom:20,border:"1px solid #e8e0d5"}}>
+      <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:10}}>Board Coverage · Active Pins</div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
+        {BOARDS.map(b=>{
+          const count=counts[b.id]||0; const intensity=count===0?0:Math.min(count/max,1);
+          const bg=count===0?"#f0ebe3":`rgba(94,76,55,${0.15+intensity*0.65})`; const tc=intensity>0.5?"#fff":"#5e4c37";
+          return <div key={b.id} style={{background:bg,borderRadius:8,padding:"7px 8px",textAlign:"center"}}>
+            <div style={{fontSize:10,fontWeight:600,color:tc,lineHeight:1.3}}>{b.short}</div>
+            <div style={{fontSize:17,fontWeight:700,color:tc,marginTop:1}}>{count}</div>
+          </div>;
+        })}
+      </div>
+    </div>
+  );
+}
+
+function PinRow({pin, onStatusChange}) {
+  const board=boardById(pin.boardId); const st=statusObj(pin.status);
+  const [hov,setHov]=useState(false);
+  const mediaOk=pin.mediaUrl&&!pin.mediaUrl.includes("⚠")&&!pin.mediaUrl.includes("expired");
+  return (
+    <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1.2fr 1.5fr 90px",gap:10,alignItems:"center",padding:"8px 14px",borderBottom:"1px solid #f5efe8",background:hov?"#fdf9f5":"#fff",fontSize:12}}
+      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}>
+      <div style={{color:"#3d2f1e",fontWeight:500}}>{board?.short||pin.boardId}</div>
+      <div><span style={{display:"inline-block",padding:"2px 8px",borderRadius:20,background:st.bg,color:st.color,fontSize:10,fontWeight:700,border:`1px solid ${st.color}33`}}>{st.label}</span></div>
+      <div style={{color:"#9e8c78",fontSize:11}}>{pin.publishDate||"—"}</div>
+      <div style={{color:mediaOk?"#276749":"#c05621",fontSize:10,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{mediaOk?"✓ Media set":"⚠ No media"}</div>
+      <select value={pin.status} onChange={e=>onStatusChange(pin.id,e.target.value)}
+        style={{fontSize:10,padding:"2px 4px",borderRadius:6,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#5e4c37",cursor:"pointer",width:"100%",fontFamily:"inherit"}}>
+        {STATUSES.map(s=><option key={s.key} value={s.key}>{s.label}</option>)}
+      </select>
+    </div>
+  );
+}
+
+function SetCard({set, onEdit, onDelete, onPinStatusChange, onExportSingle}) {
+  const [expanded,setExpanded]=useState(false);
+  const allStatuses=set.pins.map(p=>p.status);
+  const dominant=STATUSES.slice().reverse().find(s=>allStatuses.includes(s.key))||STATUSES[0];
+  const readyCount=set.pins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
+  const liveCount=set.pins.filter(p=>p.status==="live").length;
+  return (
+    <div style={{border:"1px solid #e8e0d5",borderRadius:12,overflow:"hidden",marginBottom:10,background:"#fff"}}>
+      <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr auto",gap:10,alignItems:"center",padding:"12px 16px",cursor:"pointer",background:"#faf7f2"}}
+        onClick={()=>setExpanded(e=>!e)}>
+        <div>
+          <div style={{fontWeight:700,fontSize:14,color:"#3d2f1e"}}>{set.name}</div>
+          <div style={{fontSize:11,color:"#a0896e",marginTop:2}}>{set.pins.length} pins · {liveCount} live · {readyCount} ready</div>
+        </div>
+        <div><span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:dominant.bg,color:dominant.color,fontSize:11,fontWeight:700,border:`1px solid ${dominant.color}33`}}>{dominant.label}</span></div>
+        <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins[0]?.publishDate?`First: ${set.pins[0].publishDate.slice(0,10)}`:"No dates"}</div>
+        <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins.length>0&&set.pins[set.pins.length-1]?.publishDate?`Last: ${set.pins[set.pins.length-1].publishDate.slice(0,10)}`:""}</div>
+        <div style={{display:"flex",gap:6,alignItems:"center"}}>
+          {readyCount>0&&<button onClick={e=>{e.stopPropagation();onExportSingle(set);}} style={{padding:"4px 10px",borderRadius:6,border:"none",background:"#276749",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>↓ CSV</button>}
+          <button onClick={e=>{e.stopPropagation();onEdit(set);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontSize:11,cursor:"pointer"}}>Edit</button>
+          <button onClick={e=>{e.stopPropagation();onDelete(set.id);}} style={{padding:"4px 8px",borderRadius:6,border:"1px solid #fed7d7",background:"#fff5f5",color:"#c53030",fontSize:11,cursor:"pointer"}}>✕</button>
+          <span style={{color:"#c4b5a0",fontSize:13,marginLeft:2}}>{expanded?"▲":"▼"}</span>
+        </div>
+      </div>
+      {expanded&&(
+        <div>
+          <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1.2fr 1.5fr 90px",gap:10,padding:"6px 14px",background:"#f5efe8",borderTop:"1px solid #e8e0d5"}}>
+            {["Board","Status","Publish Date","Media","Change"].map((h,i)=><div key={i} style={{fontSize:10,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.06em",textTransform:"uppercase"}}>{h}</div>)}
+          </div>
+          {set.pins.map(pin=><PinRow key={pin.id} pin={pin} onStatusChange={(pid,s)=>onPinStatusChange(set.id,pid,s)}/>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+const L=({children})=><label style={{display:"block",fontSize:11,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:5,marginTop:14}}>{children}</label>;
+const IS={width:"100%",padding:"8px 12px",borderRadius:8,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#3d2f1e",fontSize:13,boxSizing:"border-box",outline:"none",fontFamily:"inherit"};
+
+function SetModal({set, onSave, onClose}) {
+  const isNew=!set.id;
+  const [name,setName]=useState(set.name||"");
+  const [selectedBoards,setSelectedBoards]=useState((set.pins||[]).map(p=>p.boardId));
+  const [startDate,setStartDate]=useState(set.pins?.[0]?.publishDate?.slice(0,10)||new Date().toISOString().slice(0,10));
+  const [interval,setIntervalVal]=useState(8);
+  const [mediaUrl,setMediaUrl]=useState(set.pins?.[0]?.mediaUrl||"");
+  const [link,setLink]=useState(set.pins?.[0]?.link||"");
+  const [description,setDescription]=useState(set.pins?.[0]?.description||"");
+  const [keywords,setKeywords]=useState(set.pins?.[0]?.keywords||"");
+
+  function toggleBoard(bid){setSelectedBoards(sb=>sb.includes(bid)?sb.filter(b=>b!==bid):[...sb,bid]);}
+
+  function handleSave(){
+    const pins=isNew
+      ?generateSchedule(selectedBoards,startDate,interval).map(p=>({...p,mediaUrl,link,description,keywords,title:name}))
+      :set.pins.map((p,i)=>{
+          const base=new Date(startDate+"T00:00:00"); base.setDate(base.getDate()+i*interval);
+          const dow=base.getDay(); const slot=DAY_SLOTS[dow][i%DAY_SLOTS[dow].length];
+          return {...p,boardId:selectedBoards[i]??p.boardId,mediaUrl:mediaUrl||p.mediaUrl,link:link||p.link,description:description||p.description,keywords:keywords||p.keywords,title:name,publishDate:fmt(base,slot)};
+        });
+    onSave({...(isNew?{}:set),id:set.id||Date.now(),name,pins});
+  }
+
+  return (
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}
+      onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{background:"#fff",borderRadius:16,padding:28,width:540,maxHeight:"90vh",overflowY:"auto",boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}>
+        <div style={{fontFamily:"Georgia,serif",fontSize:20,color:"#3d2f1e",marginBottom:20}}>{isNew?"New Pin Set":`Edit: ${set.name}`}</div>
+        <L>Pin Set Name</L>
+        <input value={name} onChange={e=>setName(e.target.value)} style={IS} placeholder="e.g. Reading Frog"/>
+        <L>Boards ({selectedBoards.length}/8 selected)</L>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:4}}>
+          {BOARDS.map(b=>(
+            <label key={b.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:8,background:selectedBoards.includes(b.id)?"#f0ebe3":"#faf7f2",cursor:"pointer",border:`1px solid ${selectedBoards.includes(b.id)?"#c4a882":"#e8e0d5"}`}}>
+              <input type="checkbox" checked={selectedBoards.includes(b.id)} onChange={()=>toggleBoard(b.id)} style={{accentColor:"#8b6b45"}}/>
+              <span style={{fontSize:12,color:"#5e4c37",fontWeight:selectedBoards.includes(b.id)?700:400}}>{b.short}</span>
+            </label>
+          ))}
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginTop:14}}>
+          <div><L>First Publish Date</L><input type="date" value={startDate} onChange={e=>setStartDate(e.target.value)} style={IS}/></div>
+          <div><L>Days Between (7–9)</L><input type="number" value={interval} min={7} max={9} onChange={e=>setIntervalVal(parseInt(e.target.value)||8)} style={IS}/></div>
+        </div>
+        <L>Media URL</L>
+        <input value={mediaUrl} onChange={e=>setMediaUrl(e.target.value)} style={IS} placeholder="https://..."/>
+        <L>Etsy Listing URL</L>
+        <input value={link} onChange={e=>setLink(e.target.value)} style={IS} placeholder="https://thymeandtonic.etsy.com/listing/..."/>
+        <L>Pin Description</L>
+        <textarea value={description} onChange={e=>setDescription(e.target.value)} style={{...IS,height:64,resize:"vertical"}} placeholder="Up to 500 characters..."/>
+        <L>Keywords (comma-separated)</L>
+        <input value={keywords} onChange={e=>setKeywords(e.target.value)} style={IS} placeholder="cottagecore,sticker,watercolor"/>
+        {selectedBoards.length>0&&(
+          <div style={{marginTop:16,background:"#faf7f2",borderRadius:10,padding:"12px 14px",border:"1px solid #e8e0d5"}}>
+            <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8}}>Schedule Preview</div>
+            {selectedBoards.map((bid,i)=>{
+              const base=new Date(startDate+"T00:00:00"); base.setDate(base.getDate()+i*interval);
+              const dow=base.getDay(); const slot=DAY_SLOTS[dow][i%DAY_SLOTS[dow].length]; const board=boardById(bid);
+              return <div key={bid} style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#5e4c37",padding:"3px 0",borderBottom:i<selectedBoards.length-1?"1px dashed #e8e0d5":"none"}}>
+                <span>📌 {board?.short}</span><span style={{color:"#9e8c78"}}>{fmt(base,slot)}</span>
+              </div>;
+            })}
+          </div>
+        )}
+        <div style={{display:"flex",gap:10,justifyContent:"flex-end",marginTop:18}}>
+          <button onClick={onClose} style={{padding:"8px 18px",borderRadius:8,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#5e4c37",cursor:"pointer",fontWeight:600}}>Cancel</button>
+          <button onClick={handleSave} style={{padding:"8px 20px",borderRadius:8,border:"none",background:"#5e4c37",color:"#fff",cursor:"pointer",fontWeight:700,fontSize:14}}>Save</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Pill({label,active,color,onClick}) {
+  return <button onClick={onClick} style={{padding:"5px 14px",borderRadius:20,border:`2px solid ${active?color:"#d4c4b0"}`,background:active?color:"#fff",color:active?"#fff":color,fontSize:12,fontWeight:700,cursor:"pointer"}}>{label}</button>;
+}
+
+export default function App() {
+  const [sets,setSets]=useState([]);
+  const [filterStatus,setFilterStatus]=useState("all");
+  const [modalSet,setModalSet]=useState(null);
+  const [nextId,setNextId]=useState(200);
+
+  useEffect(()=>{
+    try {
+      const saved=localStorage.getItem(STORAGE_KEY);
+      if(saved){const p=JSON.parse(saved);setSets(p.sets||SEED_SETS);setNextId(p.nextId||200);}
+      else setSets(SEED_SETS);
+    } catch {setSets(SEED_SETS);}
+  },[]);
+
+  useEffect(()=>{
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify({sets,nextId}));}catch{}
+  },[sets,nextId]);
+
+  function handleSave(set){
+    if(sets.find(s=>s.id===set.id))setSets(ss=>ss.map(s=>s.id===set.id?set:s));
+    else{setSets(ss=>[...ss,{...set,id:nextId}]);setNextId(n=>n+1);}
+    setModalSet(null);
+  }
+  function handleDelete(id){if(window.confirm("Remove this pin set?"))setSets(ss=>ss.filter(s=>s.id!==id));}
+  function handlePinStatusChange(setId,pinId,newStatus){setSets(ss=>ss.map(s=>s.id===setId?{...s,pins:s.pins.map(p=>p.id===pinId?{...p,status:newStatus}:p)}:s));}
+  function handleExportSingle(set){downloadCSV(exportCSV([set]),`${set.name.replace(/\s+/g,"-").toLowerCase()}-pins.csv`);}
+  function handleExportAll(){downloadCSV(exportCSV(sets),`thyme-and-tonic-all-pins-${new Date().toISOString().slice(0,10)}.csv`);}
+
+  const allPins=sets.flatMap(s=>s.pins||[]);
+  const readyCount=allPins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
+  const filtered=filterStatus==="all"?sets:sets.filter(s=>s.pins.some(p=>p.status===filterStatus));
+  const statusCounts={};
+  STATUSES.forEach(s=>statusCounts[s.key]=allPins.filter(p=>p.status===s.key).length);
+
+  return (
+    <div style={{fontFamily:"'Inter',system-ui,sans-serif",background:"#fdf9f4",minHeight:"100vh",padding:"24px 20px"}}>
+      <div style={{maxWidth:980,margin:"0 auto"}}>
+        <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:16,flexWrap:"wrap",gap:10}}>
+          <div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:26,color:"#3d2f1e",fontWeight:400}}>🌿 Pinterest Publish Tracker</div>
+            <div style={{fontSize:13,color:"#a0896e",marginTop:3}}>Thyme & Tonic Press · Pinterest Native CSV</div>
+          </div>
+          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
+            {readyCount>0&&<button onClick={handleExportAll} style={{padding:"10px 16px",borderRadius:10,border:"none",background:"#276749",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>↓ Export All Ready ({readyCount})</button>}
+            <button onClick={()=>setModalSet({name:"",pins:[]})} style={{padding:"10px 18px",borderRadius:10,border:"none",background:"#5e4c37",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>+ New Pin Set</button>
+          </div>
+        </div>
+        <div style={{background:"#ebf8ff",border:"1px solid #bee3f8",borderRadius:10,padding:"10px 14px",marginBottom:16,fontSize:12,color:"#2b6cb0"}}>
+          📋 Exports use <strong>Pinterest's native bulk upload CSV</strong>: Title · Media URL · Pinterest board · Thumbnail · Description · Link · Publish date · Keywords
+        </div>
+        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
+          <Pill label={`All (${sets.length})`} active={filterStatus==="all"} color="#5e4c37" onClick={()=>setFilterStatus("all")}/>
+          {STATUSES.map(s=><Pill key={s.key} label={`${s.label}${statusCounts[s.key]>0?` (${statusCounts[s.key]})`:""}`} active={filterStatus===s.key} color={s.color} onClick={()=>setFilterStatus(s.key)}/>)}
+        </div>
+        <BoardCoverage sets={sets}/>
+        {filtered.length===0
+          ?<div style={{textAlign:"center",padding:48,color:"#c4b5a0",fontSize:14}}>No pin sets match this filter.</div>
+          :filtered.map(set=><SetCard key={set.id} set={set} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle}/>)
+        }
+        <div style={{marginTop:12,fontSize:11,color:"#c4b5a0",textAlign:"right"}}>{sets.length} pin sets · {allPins.length} total pins · data saved to browser</div>
+      </div>
+      {modalSet&&<SetModal set={modalSet} onSave={handleSave} onClose={()=>setModalSet(null)}/>}
+    </div>
+  );
+}
