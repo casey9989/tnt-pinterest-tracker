@@ -239,8 +239,7 @@ function DayCell({day, year, month, pins, isToday, onPinClick, onDayClick}){
 
 // ── Pin Detail Modal ─────────────────────────────────────────────────────────
 function PinDetailModal({pin, sets, onStatusChange, onClose}){
-  const board=boardById(pin.boardId);
-  const st=statusObj(pin.status);
+  const board=boardById(pin.boardId);const st=statusObj(pin.status);
   const set=sets.find(s=>s.id===pin.setId);
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}
@@ -274,6 +273,142 @@ function PinDetailModal({pin, sets, onStatusChange, onClose}){
         <div style={{fontSize:11,color:"#c4b5a0",textAlign:"right"}}>Part of "{pin.setName}" · {set?.pins?.length} pins total</div>
       </div>
     </div>
+  );
+}
+
+// ── Listing Detail Panel (slide-in from right) ───────────────────────────────
+function ListingPanel({set, onClose, onSaveSet, onExportSingle}){
+  const [localSet, setLocalSet] = useState(JSON.parse(JSON.stringify(set)));
+  const [dirty, setDirty] = useState(false);
+
+  function updatePin(pinId, field, value){
+    setLocalSet(s=>({...s, pins: s.pins.map(p=>p.id===pinId?{...p,[field]:value}:p)}));
+    setDirty(true);
+  }
+  function updateMeta(field, value){
+    setLocalSet(s=>({...s,[field]:value}));
+    setDirty(true);
+  }
+  function handleSave(){
+    onSaveSet(localSet);
+    setDirty(false);
+  }
+
+  const readyPins = localSet.pins.filter(p=>["csv_ready","scheduled"].includes(p.status));
+  const stickerImg = localSet.stickerImageUrl || "";
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div onClick={onClose} style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.3)",zIndex:900}}/>
+      {/* Panel */}
+      <div style={{position:"fixed",top:0,right:0,bottom:0,width:520,background:"#fdf9f4",zIndex:901,boxShadow:"-4px 0 40px rgba(0,0,0,0.15)",overflowY:"auto",display:"flex",flexDirection:"column"}}>
+        {/* Panel header */}
+        <div style={{padding:"20px 24px 16px",borderBottom:"1px solid #e8e0d5",background:"#fff",position:"sticky",top:0,zIndex:10}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div style={{flex:1,marginRight:12}}>
+              <div style={{fontFamily:"Georgia,serif",fontSize:19,color:"#3d2f1e",lineHeight:1.3}}>{localSet.name}</div>
+              {localSet.pins[0]?.link&&(
+                <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{fontSize:11,color:"#3182ce",marginTop:3,display:"block"}}>→ Etsy listing</a>
+              )}
+            </div>
+            <div style={{display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
+              {dirty&&<button onClick={handleSave} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#5e4c37",color:"#fff",fontWeight:700,fontSize:12,cursor:"pointer"}}>Save</button>}
+              {readyPins.length>0&&<button onClick={()=>onExportSingle(localSet)} style={{padding:"6px 12px",borderRadius:8,border:"none",background:"#276749",color:"#fff",fontWeight:700,fontSize:12,cursor:"pointer"}}>↓ CSV</button>}
+              <button onClick={onClose} style={{background:"none",border:"1px solid #d4c4b0",borderRadius:8,width:32,height:32,fontSize:18,color:"#9e8c78",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+            </div>
+          </div>
+        </div>
+
+        <div style={{padding:"20px 24px",flex:1}}>
+
+          {/* Sticker image */}
+          <div style={{marginBottom:24}}>
+            <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:8}}>Sticker Image</div>
+            {stickerImg ? (
+              <div style={{position:"relative",display:"inline-block"}}>
+                <img src={stickerImg} alt={localSet.name} style={{width:120,height:120,objectFit:"contain",borderRadius:10,border:"1px solid #e8e0d5",background:"#fff",padding:6}}/>
+                <button onClick={()=>updateMeta("stickerImageUrl","")} style={{position:"absolute",top:-6,right:-6,width:20,height:20,borderRadius:10,border:"none",background:"#c53030",color:"#fff",fontSize:11,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
+              </div>
+            ) : (
+              <div style={{background:"#f5efe8",border:"2px dashed #d4c4b0",borderRadius:10,padding:"16px 20px",fontSize:12,color:"#a0896e"}}>
+                No sticker image yet — paste a URL below
+              </div>
+            )}
+            <input value={stickerImg} onChange={e=>updateMeta("stickerImageUrl",e.target.value)}
+              placeholder="Paste sticker image URL (Canva export or Etsy image)..."
+              style={{marginTop:8,width:"100%",padding:"7px 10px",borderRadius:7,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#3d2f1e",fontSize:12,boxSizing:"border-box",outline:"none"}}/>
+          </div>
+
+          {/* Pin slots */}
+          <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:12}}>
+            Pin Schedule · {localSet.pins.length} pins
+          </div>
+
+          {localSet.pins.length===0||!localSet.pins[0].boardId ? (
+            <div style={{background:"#fffff0",border:"1px solid #f6e05e",borderRadius:10,padding:"14px 16px",fontSize:12,color:"#744210",marginBottom:16}}>
+              ⚠ No pins scheduled yet. Click Edit to assign boards and set a start date.
+            </div>
+          ) : (
+            localSet.pins.map((pin,i)=>{
+              const board=boardById(pin.boardId);
+              const st=statusObj(pin.status);
+              return (
+                <div key={pin.id} style={{background:"#fff",border:"1px solid #e8e0d5",borderRadius:12,marginBottom:12,overflow:"hidden"}}>
+                  {/* Pin header */}
+                  <div style={{display:"flex",alignItems:"center",gap:10,padding:"10px 14px",background:"#faf7f2",borderBottom:"1px solid #f0ebe3"}}>
+                    <span style={{width:10,height:10,borderRadius:3,background:board?.color||"#ccc",flexShrink:0,display:"inline-block"}}/>
+                    <span style={{fontWeight:700,fontSize:12,color:"#3d2f1e",flex:1}}>{board?.short||"No board"}</span>
+                    <span style={{fontSize:11,color:"#9e8c78"}}>{pin.publishDate||"No date"}</span>
+                    <select value={pin.status} onChange={e=>updatePin(pin.id,"status",e.target.value)}
+                      style={{fontSize:10,padding:"2px 6px",borderRadius:6,border:`1.5px solid ${st.color}`,background:st.bg,color:st.color,cursor:"pointer",fontWeight:700}}>
+                      {STATUSES.map(s=><option key={s.key} value={s.key}>{s.label}</option>)}
+                    </select>
+                  </div>
+                  {/* Pin image */}
+                  <div style={{padding:"12px 14px"}}>
+                    <div style={{fontSize:10,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.04em",marginBottom:6}}>Pin Image</div>
+                    {pin.mediaUrl&&!pin.mediaUrl.includes("⚠") ? (
+                      <div style={{display:"flex",gap:10,alignItems:"flex-start",marginBottom:8}}>
+                        <img src={pin.mediaUrl} alt="pin" style={{width:72,height:108,objectFit:"cover",borderRadius:6,border:"1px solid #e8e0d5",flexShrink:0}}
+                          onError={e=>{e.target.style.display='none';}}/>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:10,color:"#276749",fontWeight:700,marginBottom:4}}>✓ Image set</div>
+                          <button onClick={()=>updatePin(pin.id,"mediaUrl","")}
+                            style={{fontSize:10,color:"#c53030",background:"none",border:"1px solid #fed7d7",borderRadius:5,padding:"2px 8px",cursor:"pointer"}}>Remove</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{background:"#f5efe8",border:"1px dashed #d4c4b0",borderRadius:7,padding:"8px 10px",fontSize:11,color:"#c4b5a0",marginBottom:6}}>No image yet</div>
+                    )}
+                    <input value={pin.mediaUrl||""} onChange={e=>updatePin(pin.id,"mediaUrl",e.target.value)}
+                      placeholder="Paste pin image URL..."
+                      style={{width:"100%",padding:"6px 10px",borderRadius:6,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#3d2f1e",fontSize:11,boxSizing:"border-box",outline:"none"}}/>
+                    {/* Pin title */}
+                    {pin.title&&<div style={{marginTop:8,fontSize:11,color:"#5e4c37",fontWeight:600,lineHeight:1.4}}>{pin.title}</div>}
+                    {/* Pin description */}
+                    {pin.description&&<div style={{marginTop:4,fontSize:10,color:"#9e8c78",lineHeight:1.5}}>{pin.description}</div>}
+                  </div>
+                </div>
+              );
+            })
+          )}
+
+          {/* Keywords */}
+          {localSet.pins[0]?.keywords&&(
+            <div style={{marginTop:4,marginBottom:16}}>
+              <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Keywords</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                {localSet.pins[0].keywords.split(",").map((kw,i)=>(
+                  <span key={i} style={{background:"#f0ebe3",color:"#5e4c37",borderRadius:20,padding:"2px 8px",fontSize:10,fontWeight:600}}>{kw.trim()}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -386,6 +521,47 @@ function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle}){
 }
 
 // ── Board Legend ─────────────────────────────────────────────────────────────
+function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle, onOpenDetail}){
+  return (
+    <div>
+      {sets.map(set=>{
+        const allStatuses=set.pins.map(p=>p.status);
+        const dominant=STATUSES.slice().reverse().find(s=>allStatuses.includes(s.key))||STATUSES[0];
+        const readyCount=set.pins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
+        const liveCount=set.pins.filter(p=>p.status==="live").length;
+        const hasImage=set.stickerImageUrl;
+        return (
+          <div key={set.id} style={{border:"1px solid #e8e0d5",borderRadius:12,overflow:"hidden",marginBottom:8,background:"#fff",cursor:"pointer"}}
+            onClick={()=>onOpenDetail(set)}>
+            <div style={{display:"grid",gridTemplateColumns:"auto 2fr 1fr 1fr 1fr auto",gap:10,alignItems:"center",padding:"10px 14px",background:"#faf7f2"}}>
+              {/* Sticker thumb */}
+              <div style={{width:44,height:44,borderRadius:8,border:"1px solid #e8e0d5",background:"#f5efe8",overflow:"hidden",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+                {hasImage
+                  ?<img src={set.stickerImageUrl} alt="" style={{width:"100%",height:"100%",objectFit:"contain"}} onError={e=>e.target.style.display='none'}/>
+                  :<span style={{fontSize:18}}>🌿</span>}
+              </div>
+              <div>
+                <div style={{fontWeight:700,fontSize:13,color:"#3d2f1e"}}>{set.name}</div>
+                <div style={{fontSize:10,color:"#a0896e",marginTop:2,display:"flex",gap:5,flexWrap:"wrap"}}>
+                  {set.pins.filter(p=>p.boardId).map(p=>{const b=boardById(p.boardId);return b?<span key={p.id} style={{display:"inline-block",width:8,height:8,borderRadius:2,background:b.color,opacity:p.status==="live"?0.35:1}} title={b.short}></span>:null;})}
+                </div>
+              </div>
+              <div><span style={{display:"inline-block",padding:"3px 9px",borderRadius:20,background:dominant.bg,color:dominant.color,fontSize:10,fontWeight:700,border:`1px solid ${dominant.color}33`}}>{dominant.label}</span></div>
+              <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins.filter(p=>p.boardId).length} pins · {liveCount} live</div>
+              <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins[0]?.publishDate?`${set.pins[0].publishDate.slice(0,10)}`:"No dates"}</div>
+              <div style={{display:"flex",gap:5,alignItems:"center"}} onClick={e=>e.stopPropagation()}>
+                {readyCount>0&&<button onClick={()=>onExportSingle(set)} style={{padding:"3px 8px",borderRadius:6,border:"none",background:"#276749",color:"#fff",fontSize:10,fontWeight:700,cursor:"pointer"}}>↓ CSV</button>}
+                <button onClick={()=>onEdit(set)} style={{padding:"3px 8px",borderRadius:6,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontSize:10,cursor:"pointer"}}>Edit</button>
+                <button onClick={()=>onDelete(set.id)} style={{padding:"3px 6px",borderRadius:6,border:"1px solid #fed7d7",background:"#fff5f5",color:"#c53030",fontSize:10,cursor:"pointer"}}>✕</button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function BoardLegend(){
   return (
     <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
@@ -402,16 +578,17 @@ function BoardLegend(){
 // ── Main App ─────────────────────────────────────────────────────────────────
 function App(){
   const [sets,setSets]=useState([]);
-  const [view,setView]=useState("calendar"); // "calendar" | "list"
+  const [view,setView]=useState("calendar");
   const [modalSet,setModalSet]=useState(null);
   const [selectedPin,setSelectedPin]=useState(null);
-  const [nextId,setNextId]=useState(200);
+  const [detailSet,setDetailSet]=useState(null);
+  const [nextId,setNextId]=useState(300);
   const today=new Date();
   const [calYear,setCalYear]=useState(today.getFullYear());
   const [calMonth,setCalMonth]=useState(today.getMonth());
 
   useEffect(()=>{
-    try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const p=JSON.parse(saved);setSets(p.sets||SEED_SETS);setNextId(p.nextId||200);}else setSets(SEED_SETS);}
+    try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const p=JSON.parse(saved);setSets(p.sets||SEED_SETS);setNextId(p.nextId||300);}else setSets(SEED_SETS);}
     catch{setSets(SEED_SETS);}
   },[]);
   useEffect(()=>{
@@ -423,15 +600,25 @@ function App(){
     else{setSets(ss=>[...ss,{...set,id:nextId}]);setNextId(n=>n+1);}
     setModalSet(null);
   }
-  function handleDelete(id){if(window.confirm("Remove this pin set?"))setSets(ss=>ss.filter(s=>s.id!==id));}
+  function handleSaveSet(set){
+    setSets(ss=>ss.map(s=>s.id===set.id?set:s));
+    // Keep panel open with updated data
+    setDetailSet(set);
+  }
+  function handleDelete(id){
+    if(window.confirm("Remove this pin set?")){
+      setSets(ss=>ss.filter(s=>s.id!==id));
+      if(detailSet?.id===id) setDetailSet(null);
+    }
+  }
   function handlePinStatusChange(setId,pinId,newStatus){setSets(ss=>ss.map(s=>s.id===setId?{...s,pins:s.pins.map(p=>p.id===pinId?{...p,status:newStatus}:p)}:s));}
   function handleExportSingle(set){downloadCSV(exportCSV([set]),`${set.name.replace(/\s+/g,"-").toLowerCase()}-pins.csv`);}
   function handleExportAll(){downloadCSV(exportCSV(sets),`thyme-and-tonic-all-pins-${new Date().toISOString().slice(0,10)}.csv`);}
+  function openDetail(set){setDetailSet(set);setSelectedPin(null);}
 
   const allPins=sets.flatMap(s=>s.pins||[]);
   const readyCount=allPins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
 
-  // Calendar grid
   const daysInMonth=getDaysInMonth(calYear,calMonth);
   const firstDay=getFirstDayOfMonth(calYear,calMonth);
   const todayStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
@@ -439,10 +626,14 @@ function App(){
   function prevMonth(){if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1);}
   function nextMonth(){if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1);}
 
-  return (
-    <div style={{background:"#fdf9f4",minHeight:"100vh",padding:"20px 20px"}}>
-      <div style={{maxWidth:1100,margin:"0 auto"}}>
+  // Filter for list view - only show sets, filter by status of any pin
+  const [filterStatus,setFilterStatus]=useState("all");
+  const filtered=filterStatus==="all"?sets:sets.filter(s=>s.pins.some(p=>p.status===filterStatus));
+  const statusCounts={};STATUSES.forEach(s=>statusCounts[s.key]=allPins.filter(p=>p.status===s.key).length);
 
+  return (
+    <div style={{fontFamily:"'Inter',system-ui,sans-serif",background:"#fdf9f4",minHeight:"100vh",padding:"20px 20px"}}>
+      <div style={{maxWidth:1100,margin:"0 auto"}}>
         {/* Header */}
         <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20,flexWrap:"wrap",gap:10}}>
           <div>
@@ -461,22 +652,15 @@ function App(){
 
         {view==="calendar"&&(
           <>
-            {/* Month nav */}
             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
               <button onClick={prevMonth} style={{padding:"6px 14px",borderRadius:8,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontWeight:700,fontSize:14,cursor:"pointer"}}>‹</button>
               <div style={{fontFamily:"Georgia,serif",fontSize:20,color:"#3d2f1e",fontWeight:400}}>{MONTH_NAMES[calMonth]} {calYear}</div>
               <button onClick={nextMonth} style={{padding:"6px 14px",borderRadius:8,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontWeight:700,fontSize:14,cursor:"pointer"}}>›</button>
             </div>
-
-            {/* Legend */}
             <BoardLegend/>
-
-            {/* Day headers */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4,marginBottom:4}}>
               {DAY_NAMES.map(d=><div key={d} style={{textAlign:"center",fontSize:11,fontWeight:700,color:"#a0896e",letterSpacing:"0.05em",padding:"4px 0"}}>{d}</div>)}
             </div>
-
-            {/* Calendar grid */}
             <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
               {Array.from({length:firstDay}).map((_,i)=><div key={`e${i}`}/>)}
               {Array.from({length:daysInMonth}).map((_,i)=>{
@@ -487,10 +671,8 @@ function App(){
                 return <DayCell key={day} day={day} year={calYear} month={calMonth} pins={pins} isToday={isToday} onPinClick={setSelectedPin}/>;
               })}
             </div>
-
-            {/* Status key */}
             <div style={{display:"flex",gap:12,marginTop:16,flexWrap:"wrap"}}>
-              <div style={{fontSize:11,color:"#9e8c78",fontStyle:"italic"}}>Click any pin tag to view details or update status</div>
+              <div style={{fontSize:11,color:"#9e8c78",fontStyle:"italic"}}>Click any pin tag to update status</div>
               <div style={{display:"flex",gap:10,marginLeft:"auto"}}>
                 {STATUSES.map(s=><div key={s.key} style={{display:"flex",alignItems:"center",gap:4,fontSize:11,color:"#7c6f5e"}}>
                   <span style={{width:8,height:8,borderRadius:2,background:s.color,display:"inline-block"}}></span>{s.label}
@@ -501,7 +683,13 @@ function App(){
         )}
 
         {view==="list"&&(
-          <ListView sets={sets} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle}/>
+          <>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
+              <Pill label={`All (${sets.length})`} active={filterStatus==="all"} color="#5e4c37" onClick={()=>setFilterStatus("all")}/>
+              {STATUSES.map(s=><Pill key={s.key} label={`${s.label}${statusCounts[s.key]>0?` (${statusCounts[s.key]})`:""}`} active={filterStatus===s.key} color={s.color} onClick={()=>setFilterStatus(s.key)}/>)}
+            </div>
+            <ListView sets={filtered} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle} onOpenDetail={openDetail}/>
+          </>
         )}
 
         <div style={{marginTop:16,fontSize:11,color:"#c4b5a0",textAlign:"right"}}>{sets.length} pin sets · {allPins.length} total pins · data saved to browser</div>
@@ -509,8 +697,13 @@ function App(){
 
       {modalSet&&<SetModal set={modalSet} onSave={handleSave} onClose={()=>setModalSet(null)}/>}
       {selectedPin&&<PinDetailModal pin={selectedPin} sets={sets} onStatusChange={(sid,pid,s)=>{handlePinStatusChange(sid,pid,s);setSelectedPin(null);}} onClose={()=>setSelectedPin(null)}/>}
+      {detailSet&&<ListingPanel set={detailSet} onClose={()=>setDetailSet(null)} onSaveSet={handleSaveSet} onExportSingle={handleExportSingle}/>}
     </div>
   );
+}
+
+function Pill({label,active,color,onClick}){
+  return <button onClick={onClick} style={{padding:"5px 14px",borderRadius:20,border:`2px solid ${active?color:"#d4c4b0"}`,background:active?color:"#fff",color:active?"#fff":color,fontSize:12,fontWeight:700,cursor:"pointer"}}>{label}</button>;
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
