@@ -68,12 +68,12 @@ const SEED_SETS = [
   {id:1,name:"Vintage Suitcase Sticker",      pins:buildSeedPins(1,["b_1074812336010491879","b_1074812336010491881","b_1074812336010491884","b_1074812336010491885"],"2025-05-01","live","","https://thymeandtonic.etsy.com","Vintage suitcase watercolor sticker","cottagecore,travel,vintage,sticker,watercolor")},
   {id:2,name:"Book Dragon Sticker",            pins:buildSeedPins(2,["b_1074812336010491880","b_1074812336010491882","b_1074812336010491883","b_1074812336010491887"],"2025-05-10","live","","","","")},
   {id:3,name:"Reading Frog Sticker",           pins:buildSeedPins(3,["b_1074812336010491879","b_1074812336010491880","b_1074812336010491881","b_1074812336010491882"],"2025-05-20","live","","","","")},
-  {id:4,name:"Raccoon with Headphones Sticker",pins:buildSeedPins(4,["b_1074812336010491883","b_1074812336010491884","b_1074812336010491885","b_1074812336010491887"],"2025-05-30","live","","","","")},
+  {id:4,name:"Raccoon with Headphones Sticker",sku:"MS1-004",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/a7b8c9/7890123456/il_340x270.7890123456_racc.jpg",pins:buildSeedPins(4,["b_1074812336010491883","b_1074812336010491884","b_1074812336010491885","b_1074812336010491887"],"2025-05-30","live","","","","")},
   {id:5,name:"Reading Bat Sticker",            pins:buildSeedPins(5,["b_1074812336010491879","b_1074812336010491882","b_1074812336010491883","b_1074812336010491884"],"2025-06-10","live","","","","")},
   {id:6,name:"Scholarly Crow Sticker",         pins:buildSeedPins(6,["b_1074812336010491880","b_1074812336010491881","b_1074812336010491885","b_1074812336010491887"],"2025-06-20","live","","","","")},
   {id:7,name:"Meadow Mouse Sticker",           pins:buildSeedPins(7,["b_1074812336010491879","b_1074812336010491882","b_1074812336010491884","b_1074812336010491887"],"2025-07-01","live","","","","")},
   {id:8,name:"Bat Celestial Set",      pins:buildSeedPins(8,["b_1074812336010491880","b_1074812336010491881","b_1074812336010491882","b_1074812336010491883"],"2025-07-12","scheduled","","","Celestial bat watercolor sticker dark academia witchy aesthetic","darkacademia,celestial,bat,witchy,sticker")},
-  {id:9,name:"Music Highland Cow Sticker",pins:[
+  {id:9,name:"Music Highland Cow Sticker",sku:"MS1-006",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/cc39b1/8176316353/il_340x270.8176316353_eons.jpg",pins:[
     {id:"9-0",boardId:"b_1074812336010491879",title:"Music Highland Cow Sticker · Watercolor Cottagecore Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"A watercolor highland cow strumming a guitar — this die-cut vinyl sticker is made for cottagecore lovers and music fans. Matte or glossy finish. Perfect for journals laptops and water bottles.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-12 11:36",status:"csv_ready"},
     {id:"9-1",boardId:"b_1074812336010491881",title:"Cottagecore Highland Cow with Guitar · Watercolor Sticker",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Soft watercolor illustration of a fluffy highland cow with a guitar. This cottagecore-aesthetic vinyl sticker ships from Thyme and Tonic Press.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-20 11:40",status:"csv_ready"},
     {id:"9-2",boardId:"b_1074812336010491883",title:"Cute Musical Cow Sticker · Watercolor Animal Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Adorable musical highland cow vinyl die-cut sticker! Watercolor art style with a thick white border.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-28 22:01",status:"csv_ready"},
@@ -357,9 +357,13 @@ function ListingPanel({set, onClose, onSaveSet, onExportSingle}){
               <EtsyThumb set={localSet} size={56}/>
               <div style={{fontFamily:"Georgia,serif",fontSize:19,color:"#3d2f1e",lineHeight:1.3}}>{localSet.name}</div>
             </div>
+              <div style={{display:"flex",gap:8,alignItems:"center",marginTop:6,flexWrap:"wrap"}}>
+              {localSet.sku&&<span style={{background:"#f0ebe3",color:"#7c6f5e",borderRadius:6,padding:"3px 8px",fontWeight:700,fontSize:11}}>{localSet.sku}</span>}
+              {localSet.sku&&<span style={{fontSize:11,color:"#a0896e"}}>{getSection(localSet.sku)}</span>}
               {localSet.pins[0]?.link&&(
-                <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:5,marginTop:6,fontSize:12,color:"#fff",fontWeight:700,background:"#e05d26",borderRadius:8,padding:"5px 12px",textDecoration:"none"}}>↗ View on Etsy</a>
+                <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:12,color:"#fff",fontWeight:700,background:"#e05d26",borderRadius:8,padding:"4px 12px",textDecoration:"none"}}>↗ View on Etsy</a>
               )}
+            </div>
             </div>
             <div style={{display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
               {dirty&&<button onClick={handleSave} style={{padding:"6px 14px",borderRadius:8,border:"none",background:"#5e4c37",color:"#fff",fontWeight:700,fontSize:12,cursor:"pointer"}}>Save</button>}
@@ -611,8 +615,10 @@ function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle, on
                   <div style={{fontWeight:700,fontSize:13,color:"#3d2f1e"}}>{set.name}</div>
                   {set.pins?.[0]?.link&&<a href={set.pins[0].link} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{fontSize:10,color:"#3182ce",fontWeight:600,whiteSpace:"nowrap",textDecoration:"none",background:"#ebf8ff",border:"1px solid #bee3f8",borderRadius:10,padding:"1px 7px"}}>↗ Etsy</a>}
                 </div>
-                <div style={{fontSize:10,color:"#a0896e",marginTop:2,display:"flex",gap:5,flexWrap:"wrap"}}>
-                  {set.pins.filter(p=>p.boardId).map(p=>{const b=boardById(p.boardId);return b?<span key={p.id} style={{display:"inline-block",width:8,height:8,borderRadius:2,background:b.color,opacity:p.status==="live"?0.35:1}} title={b.short}></span>:null;})}
+                <div style={{fontSize:10,color:"#a0896e",marginTop:2,display:"flex",gap:6,alignItems:"center",flexWrap:"wrap"}}>
+                  {set.sku&&<span style={{background:"#f0ebe3",color:"#7c6f5e",borderRadius:4,padding:"1px 5px",fontWeight:700,fontSize:9,letterSpacing:"0.03em"}}>{set.sku}</span>}
+                  {set.sku&&<span style={{color:"#c4b5a0",fontSize:9}}>{getSection(set.sku)}</span>}
+                  {set.pins.filter(p=>p.boardId).map(p=>{const b=boardById(p.boardId);return b?<span key={p.id} style={{display:"inline-block",width:7,height:7,borderRadius:2,background:b.color,opacity:p.status==="live"?0.35:1}} title={b.short}></span>:null;})}
                 </div>
               </div>
               <div><span style={{display:"inline-block",padding:"3px 9px",borderRadius:20,background:dominant.bg,color:dominant.color,fontSize:10,fontWeight:700,border:`1px solid ${dominant.color}33`}}>{dominant.label}</span></div>
@@ -645,6 +651,29 @@ function BoardLegend(){
 }
 
 // ── Main App ─────────────────────────────────────────────────────────────────
+// ── Section from SKU ────────────────────────────────────────────────────────
+const SKU_SECTIONS = {
+  'FF': 'Forest Friends',
+  'ESC': 'Emotional Support Coworker',
+  'HW': 'Halloween/Witchy',
+  'CS': 'Christmas',
+  'MS': 'Music Animals',
+  'LT': 'Literary/Bookish',
+  'JA': 'Jungle Animals',
+  'PM': 'Pride',
+  'MD': "Mother's Day",
+  'WP': 'Work Plants',
+  'WO': 'Work Humor',
+  'VO': 'Vintage Objects',
+};
+function getSection(sku) {
+  if (!sku) return 'Other';
+  const m = sku.match(/^([A-Z]+)/);
+  if (!m) return 'Other';
+  return SKU_SECTIONS[m[1]] || 'Other';
+}
+const ALL_SECTIONS = [...new Set(Object.values(SKU_SECTIONS))].sort();
+
 function App(){
   const [sets,setSets]=useState([]);
   const [view,setView]=useState("calendar");
@@ -652,6 +681,8 @@ function App(){
   const [selectedPin,setSelectedPin]=useState(null);
   const [detailSet,setDetailSet]=useState(null);
   const [nextId,setNextId]=useState(300);
+  const [search,setSearch]=useState("");
+  const [sectionFilter,setSectionFilter]=useState("all");
   const today=new Date();
   const [calYear,setCalYear]=useState(today.getFullYear());
   const [calMonth,setCalMonth]=useState(today.getMonth());
@@ -697,7 +728,18 @@ function App(){
 
   // Filter for list view - only show sets, filter by status of any pin
   const [filterStatus,setFilterStatus]=useState("all");
-  const filtered=filterStatus==="all"?sets:sets.filter(s=>s.pins.some(p=>p.status===filterStatus));
+  const filtered=sets.filter(s=>{
+    if(filterStatus!=="all"&&!s.pins.some(p=>p.status===filterStatus)) return false;
+    if(sectionFilter!=="all"&&getSection(s.sku)!==sectionFilter) return false;
+    if(search){
+      const q=search.toLowerCase();
+      const matchName=s.name?.toLowerCase().includes(q);
+      const matchSku=s.sku?.toLowerCase().includes(q);
+      const matchSection=getSection(s.sku).toLowerCase().includes(q);
+      if(!matchName&&!matchSku&&!matchSection) return false;
+    }
+    return true;
+  });
   const statusCounts={};STATUSES.forEach(s=>statusCounts[s.key]=allPins.filter(p=>p.status===s.key).length);
 
   return (
@@ -753,10 +795,28 @@ function App(){
 
         {view==="list"&&(
           <>
+            {/* Search + Section filter */}
+            <div style={{display:"flex",gap:8,marginBottom:12,flexWrap:"wrap",alignItems:"center"}}>
+              <div style={{position:"relative",flex:"1",minWidth:200}}>
+                <span style={{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",fontSize:14,color:"#c4b5a0"}}>🔍</span>
+                <input value={search} onChange={e=>setSearch(e.target.value)}
+                  placeholder="Search by name, SKU, or section..."
+                  style={{width:"100%",paddingLeft:32,paddingRight:12,paddingTop:8,paddingBottom:8,borderRadius:9,border:"1px solid #d4c4b0",background:"#fff",color:"#3d2f1e",fontSize:13,boxSizing:"border-box",outline:"none"}}/>
+                {search&&<button onClick={()=>setSearch("")} style={{position:"absolute",right:8,top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:14,color:"#c4b5a0"}}>×</button>}
+              </div>
+              <select value={sectionFilter} onChange={e=>setSectionFilter(e.target.value)}
+                style={{padding:"8px 12px",borderRadius:9,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontSize:13,cursor:"pointer",fontWeight:600}}>
+                <option value="all">All Sections</option>
+                {ALL_SECTIONS.map(s=><option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            {/* Status filter pills */}
             <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:14}}>
               <Pill label={`All (${sets.length})`} active={filterStatus==="all"} color="#5e4c37" onClick={()=>setFilterStatus("all")}/>
               {STATUSES.map(s=><Pill key={s.key} label={`${s.label}${statusCounts[s.key]>0?` (${statusCounts[s.key]})`:""}`} active={filterStatus===s.key} color={s.color} onClick={()=>setFilterStatus(s.key)}/>)}
             </div>
+            {/* Result count */}
+            {(search||sectionFilter!=="all")&&<div style={{fontSize:11,color:"#a0896e",marginBottom:10}}>{filtered.length} of {sets.length} listings</div>}
             <ListView sets={filtered} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle} onOpenDetail={openDetail}/>
           </>
         )}
