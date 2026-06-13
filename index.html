@@ -312,7 +312,7 @@ function ListingPanel({set, onClose, onSaveSet, onExportSingle}){
               <div style={{fontFamily:"Georgia,serif",fontSize:19,color:"#3d2f1e",lineHeight:1.3}}>{localSet.name}</div>
             </div>
               {localSet.pins[0]?.link&&(
-                <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{fontSize:11,color:"#3182ce",marginTop:3,display:"block"}}>→ Etsy listing</a>
+                <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:5,marginTop:6,fontSize:12,color:"#fff",fontWeight:700,background:"#e05d26",borderRadius:8,padding:"5px 12px",textDecoration:"none"}}>↗ View on Etsy</a>
               )}
             </div>
             <div style={{display:"flex",gap:8,alignItems:"center",flexShrink:0}}>
@@ -561,7 +561,10 @@ function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle, on
               {/* Sticker thumb */}
               <EtsyThumb set={set} size={44}/>
               <div>
-                <div style={{fontWeight:700,fontSize:13,color:"#3d2f1e"}}>{set.name}</div>
+                <div style={{display:"flex",alignItems:"center",gap:8}}>
+                  <div style={{fontWeight:700,fontSize:13,color:"#3d2f1e"}}>{set.name}</div>
+                  {set.pins?.[0]?.link&&<a href={set.pins[0].link} target="_blank" rel="noreferrer" onClick={e=>e.stopPropagation()} style={{fontSize:10,color:"#3182ce",fontWeight:600,whiteSpace:"nowrap",textDecoration:"none",background:"#ebf8ff",border:"1px solid #bee3f8",borderRadius:10,padding:"1px 7px"}}>↗ Etsy</a>}
+                </div>
                 <div style={{fontSize:10,color:"#a0896e",marginTop:2,display:"flex",gap:5,flexWrap:"wrap"}}>
                   {set.pins.filter(p=>p.boardId).map(p=>{const b=boardById(p.boardId);return b?<span key={p.id} style={{display:"inline-block",width:8,height:8,borderRadius:2,background:b.color,opacity:p.status==="live"?0.35:1}} title={b.short}></span>:null;})}
                 </div>
