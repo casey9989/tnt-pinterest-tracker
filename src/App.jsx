@@ -336,47 +336,6 @@ function SetModal({set,onSave,onClose}){
 }
 
 // ── List View ────────────────────────────────────────────────────────────────
-const ETSY_IMGS = {
-  "1497819149": "https://i.etsystatic.com/43109985/r/il/1b92f3/8137542001/il_340x270.8137542001_rd90.jpg",
-  "1467061062": "https://i.etsystatic.com/43109985/r/il/08c2c9/8085190436/il_340x270.8085190436_4qvc.jpg",
-  "1466572192": "https://i.etsystatic.com/43109985/r/il/50bb69/5046280854/il_340x270.5046280854_hqxp.jpg",
-  "1481611058": "https://i.etsystatic.com/43109985/r/il/3c317f/8105189589/il_340x270.8105189589_hl5p.jpg",
-  "4520773459": "https://i.etsystatic.com/43109985/r/il/cc39b1/8176316353/il_340x270.8176316353_eons.jpg",
-  "1476332027": "https://i.etsystatic.com/43109985/r/il/e08354/5077078163/il_340x270.5077078163_2nhu.jpg",
-  "1481567070": "https://i.etsystatic.com/43109985/r/il/9720b6/5021626312/il_340x270.5021626312_o2iv.jpg",
-  "4515321323": "https://i.etsystatic.com/43109985/r/il/d97347/8090054338/il_340x270.8090054338_kzqt.jpg",
-  "4518447218": "https://i.etsystatic.com/43109985/r/il/07bd6d/8112087928/il_340x270.8112087928_ch0z.jpg",
-  "4518453174": "https://i.etsystatic.com/43109985/r/il/9e36ef/8160014109/il_340x270.8160014109_8dbv.jpg",
-  "4511317364": "https://i.etsystatic.com/43109985/r/il/25657b/8061465412/il_340x270.8061465412_8g19.jpg",
-  "4511307559": "https://i.etsystatic.com/43109985/r/il/6d0d54/8061394498/il_340x270.8061394498_tmjq.jpg",
-  "1476805819": "https://i.etsystatic.com/43109985/r/il/c86fe0/5076167969/il_340x270.5076167969_wevq.jpg",
-  "1476314567": "https://i.etsystatic.com/43109985/r/il/5b7935/8133118201/il_340x270.8133118201_q2lo.jpg",
-  "1494395102": "https://i.etsystatic.com/43109985/r/il/1bc47f/5022652852/il_340x270.5022652852_4fv4.jpg",
-  "1510473841": "https://i.etsystatic.com/43109985/r/il/36c10f/5031294746/il_340x270.5031294746_9o8o.jpg",
-  "1473498527": "https://i.etsystatic.com/43109985/r/il/9f0391/5046234902/il_340x270.5046234902_sw96.jpg",
-  "1700750992": "https://i.etsystatic.com/43109985/r/il/890a5e/5967333555/il_340x270.5967333555_7c42.jpg",
-  "1458556482": "https://i.etsystatic.com/43109985/r/il/28381e/5021656518/il_340x270.5021656518_a26f.jpg",
-  "1458555518": "https://i.etsystatic.com/43109985/r/il/1c25f0/5028819934/il_340x270.5028819934_80oe.jpg",
-  "1561771945": "https://i.etsystatic.com/43109985/r/il/9da324/5316190599/il_340x270.5316190599_5k4l.jpg",
-  "1603690682": "https://i.etsystatic.com/43109985/r/il/f4edbc/5581666343/il_340x270.5581666343_j3s2.jpg",
-  "1561773159": "https://i.etsystatic.com/43109985/r/il/9d56a7/5268016996/il_340x270.5268016996_kmkv.jpg",
-  "1469973577": "https://i.etsystatic.com/43109985/r/il/bb6c69/5073785991/il_340x270.5073785991_cp2n.jpg",
-  "1554716281": "https://i.etsystatic.com/43109985/r/il/17c5fe/5282571741/il_340x270.5282571741_ebz2.jpg",
-  "1521474886": "https://i.etsystatic.com/43109985/r/il/e524ed/5193957095/il_340x270.5193957095_k9ll.jpg",
-  "1458554256": "https://i.etsystatic.com/43109985/r/il/81d2a3/2345678901/il_340x270.2345678901_corg.jpg",
-  "1458553994": "https://i.etsystatic.com/43109985/r/il/92e3b4/3456789012/il_340x270.3456789012_dach.jpg",
-  "1458553732": "https://i.etsystatic.com/43109985/r/il/a3f4c5/4567890123/il_340x270.4567890123_gold.jpg",
-  "1458553470": "https://i.etsystatic.com/43109985/r/il/b4a5d6/5678901234/il_340x270.5678901234_labr.jpg",
-  "1458553208": "https://i.etsystatic.com/43109985/r/il/c5b6e7/6789012345/il_340x270.6789012345_husk.jpg",
-  "1473134807": "https://i.etsystatic.com/43109985/r/il/0a5716/5028688046/il_340x270.5028688046_1g64.jpg",
-  "1472749985": "https://i.etsystatic.com/43109985/r/il/c0719e/5028892794/il_340x270.5028892794_muc5.jpg",
-  "1473499655": "https://i.etsystatic.com/43109985/r/il/43727b/5077118569/il_340x270.5077118569_5njv.jpg",
-  "1625116861": "https://i.etsystatic.com/43109985/r/il/b2dd2e/5561526960/il_340x270.5561526960_d2d7.jpg",
-  "1837849863": "https://i.etsystatic.com/43109985/r/il/5d684b/6531889981/il_340x270.6531889981_r5ek.jpg",
-  "1459304698": "https://i.etsystatic.com/43109985/r/il/fce37c/5067758059/il_340x270.5067758059_am7r.jpg",
-  "1481256287": "https://i.etsystatic.com/43109985/r/il/ab2798/5028789066/il_340x270.5028789066_mb74.jpg",
-  "1716446657": "https://i.etsystatic.com/43109985/r/il/dec75a/5973683963/il_340x270.5973683963_ttrc.jpg",
-};
 
 function EtsyThumb({set, size=44}){
   const etsy_id = set.etsy_id || String(set.id);
