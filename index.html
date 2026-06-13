@@ -17,53 +17,7 @@
 </head>
 <body>
 <div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect } = React;
-
-const BOARDS = [
-  { id:"b_1074812336010491879", name:"Thyme & Tonic Press",     short:"T&T Main",       color:"#7c5cbf" },
-  { id:"b_1074812336010491880", name:"Bookish sticker ideas",   short:"Bookish",         color:"#3182ce" },
-  { id:"b_1074812336010491881", name:"Cottagecore aesthetic",   short:"Cottagecore",     color:"#38a169" },
-  { id:"b_1074812336010491882", name:"Dark academia style",     short:"Dark Academia",   color:"#744210" },
-  { id:"b_1074812336010491883", name:"Cute animal stickers",    short:"Cute Animals",    color:"#d53f8c" },
-  { id:"b_1074812336010491884", name:"Sticker collection inspo",short:"Sticker Inspo",   color:"#dd6b20" },
-  { id:"b_1074812336010491885", name:"Journal & planner decor", short:"Journal/Planner", color:"#2b6cb0" },
-  { id:"b_1074812336010491887", name:"Gifts for Book Lovers",   short:"Book Gifts",      color:"#b7791f" },
-];
-
-const DAY_SLOTS = {
-  0:["20:01","21:47","22:01","22:51","23:16"],
-  1:["20:13","21:19","21:40","22:52"],
-  2:["17:50","21:28","21:46","22:56"],
-  3:["17:56","22:04","22:58"],
-  4:["03:22","22:00","22:58"],
-  5:["11:36","22:13","22:41"],
-  6:["03:00","11:40","17:38","22:28"],
-};
-
-const STATUSES = [
-  { key:"idea",        label:"Idea",        color:"#a0aec0", bg:"#f7fafc" },
-  { key:"in_progress", label:"In Progress", color:"#d69e2e", bg:"#fffff0" },
-  { key:"csv_ready",   label:"CSV Ready",   color:"#3182ce", bg:"#ebf8ff" },
-  { key:"scheduled",   label:"Scheduled",   color:"#dd6b20", bg:"#fffaf0" },
-  { key:"live",        label:"Live",        color:"#276749", bg:"#f0fff4" },
-];
-
-const STORAGE_KEY = "thymeandtonic_pinterest_v2";
-
-function fmt(dateObj, timeStr) {
-  const y=dateObj.getFullYear(), m=String(dateObj.getMonth()+1).padStart(2,"0"), d=String(dateObj.getDate()).padStart(2,"0");
-  return `${y}-${m}-${d} ${timeStr}`;
-}
-
-function buildSeedPins(setId, boardIds, startDate, status, mediaUrl, link, description, keywords) {
-  return boardIds.map((boardId,i)=>{
-    const d=new Date(startDate+"T00:00:00"); d.setDate(d.getDate()+i*8);
-    const slot=DAY_SLOTS[d.getDay()][setId%DAY_SLOTS[d.getDay()].length];
-    return {id:`${setId}-${i}`,boardId,title:"",mediaUrl:mediaUrl||"",link:link||"",description:description||"",keywords:keywords||"",publishDate:fmt(d,slot),status};
-  });
-}
-
+<script>
 const SEED_SETS = [
   {id:1,name:"Vintage Suitcase Sticker",      sku:"VO2-013",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/08c2c9/8085190436/il_340x270.8085190436_4qvc.jpg",pins:buildSeedPins(1,["b_1074812336010491879","b_1074812336010491881","b_1074812336010491884","b_1074812336010491885"],"2025-05-01","live","","https://thymeandtonic.etsy.com","Vintage suitcase watercolor sticker","cottagecore,travel,vintage,sticker,watercolor")},
   {id:2,name:"Book Dragon Sticker",            sku:"LT1-002",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/6d0d54/8061394498/il_340x270.8061394498_tmjq.jpg",pins:buildSeedPins(2,["b_1074812336010491880","b_1074812336010491882","b_1074812336010491883","b_1074812336010491887"],"2025-05-10","live","","","","")},
@@ -205,6 +159,57 @@ const SEED_SETS = [
   {id:229,name:"Halloween Cat with Flowers Sticker",sku:"HW1-004",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/dec818/5193967527/il_340x270.5193967527_1tja.jpg",pins:[{id:"229-0",boardId:"",title:"",mediaUrl:"",link:"",description:"",keywords:"",publishDate:"",status:"idea"}]},
   {id:230,name:"Emotional Support Coworker Maine Coon Cat Sticker",sku:"ESC-013",stickerImageUrl:"https://i.etsystatic.com/43109985/r/il/dc7d7b/5077083405/il_340x270.5077083405_4wvp.jpg",pins:[{id:"230-0",boardId:"",title:"",mediaUrl:"",link:"",description:"",keywords:"",publishDate:"",status:"idea"}]},
 ];
+window._SEED_SETS = SEED_SETS;
+</script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+const BOARDS = [
+  { id:"b_1074812336010491879", name:"Thyme & Tonic Press",     short:"T&T Main",       color:"#7c5cbf" },
+  { id:"b_1074812336010491880", name:"Bookish sticker ideas",   short:"Bookish",         color:"#3182ce" },
+  { id:"b_1074812336010491881", name:"Cottagecore aesthetic",   short:"Cottagecore",     color:"#38a169" },
+  { id:"b_1074812336010491882", name:"Dark academia style",     short:"Dark Academia",   color:"#744210" },
+  { id:"b_1074812336010491883", name:"Cute animal stickers",    short:"Cute Animals",    color:"#d53f8c" },
+  { id:"b_1074812336010491884", name:"Sticker collection inspo",short:"Sticker Inspo",   color:"#dd6b20" },
+  { id:"b_1074812336010491885", name:"Journal & planner decor", short:"Journal/Planner", color:"#2b6cb0" },
+  { id:"b_1074812336010491887", name:"Gifts for Book Lovers",   short:"Book Gifts",      color:"#b7791f" },
+];
+
+const DAY_SLOTS = {
+  0:["20:01","21:47","22:01","22:51","23:16"],
+  1:["20:13","21:19","21:40","22:52"],
+  2:["17:50","21:28","21:46","22:56"],
+  3:["17:56","22:04","22:58"],
+  4:["03:22","22:00","22:58"],
+  5:["11:36","22:13","22:41"],
+  6:["03:00","11:40","17:38","22:28"],
+};
+
+const STATUSES = [
+  { key:"idea",        label:"Idea",        color:"#a0aec0", bg:"#f7fafc" },
+  { key:"in_progress", label:"In Progress", color:"#d69e2e", bg:"#fffff0" },
+  { key:"csv_ready",   label:"CSV Ready",   color:"#3182ce", bg:"#ebf8ff" },
+  { key:"scheduled",   label:"Scheduled",   color:"#dd6b20", bg:"#fffaf0" },
+  { key:"live",        label:"Live",        color:"#276749", bg:"#f0fff4" },
+];
+
+const STORAGE_KEY = "thymeandtonic_pinterest_v2";
+
+function fmt(dateObj, timeStr) {
+  const y=dateObj.getFullYear(), m=String(dateObj.getMonth()+1).padStart(2,"0"), d=String(dateObj.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d} ${timeStr}`;
+}
+
+function buildSeedPins(setId, boardIds, startDate, status, mediaUrl, link, description, keywords) {
+  return boardIds.map((boardId,i)=>{
+    const d=new Date(startDate+"T00:00:00"); d.setDate(d.getDate()+i*8);
+    const slot=DAY_SLOTS[d.getDay()][setId%DAY_SLOTS[d.getDay()].length];
+    return {id:`${setId}-${i}`,boardId,title:"",mediaUrl:mediaUrl||"",link:link||"",description:description||"",keywords:keywords||"",publishDate:fmt(d,slot),status};
+  });
+}
+
+const SEED_SETS = window._SEED_SETS;
+
 
 function boardById(id){return BOARDS.find(b=>b.id===id);}
 function statusObj(key){return STATUSES.find(s=>s.key===key)||STATUSES[0];}
