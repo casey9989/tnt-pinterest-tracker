@@ -11,7 +11,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #fdf9f4; font-family: 'Inter', system-ui, sans-serif; }
     select, input, textarea, button { font-family: inherit; }
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-thumb { background: #d4c4b0; border-radius: 3px; }
   </style>
 </head>
@@ -21,14 +21,14 @@
 const { useState, useEffect } = React;
 
 const BOARDS = [
-  { id:"b_1074812336010491879", name:"Thyme & Tonic Press",     short:"T&T Main"       },
-  { id:"b_1074812336010491880", name:"Bookish sticker ideas",   short:"Bookish"         },
-  { id:"b_1074812336010491881", name:"Cottagecore aesthetic",   short:"Cottagecore"     },
-  { id:"b_1074812336010491882", name:"Dark academia style",     short:"Dark Academia"   },
-  { id:"b_1074812336010491883", name:"Cute animal stickers",    short:"Cute Animals"    },
-  { id:"b_1074812336010491884", name:"Sticker collection inspo",short:"Sticker Inspo"   },
-  { id:"b_1074812336010491885", name:"Journal & planner decor", short:"Journal/Planner" },
-  { id:"b_1074812336010491887", name:"Gifts for Book Lovers",   short:"Book Gifts"      },
+  { id:"b_1074812336010491879", name:"Thyme & Tonic Press",     short:"T&T Main",       color:"#7c5cbf" },
+  { id:"b_1074812336010491880", name:"Bookish sticker ideas",   short:"Bookish",         color:"#3182ce" },
+  { id:"b_1074812336010491881", name:"Cottagecore aesthetic",   short:"Cottagecore",     color:"#38a169" },
+  { id:"b_1074812336010491882", name:"Dark academia style",     short:"Dark Academia",   color:"#744210" },
+  { id:"b_1074812336010491883", name:"Cute animal stickers",    short:"Cute Animals",    color:"#d53f8c" },
+  { id:"b_1074812336010491884", name:"Sticker collection inspo",short:"Sticker Inspo",   color:"#dd6b20" },
+  { id:"b_1074812336010491885", name:"Journal & planner decor", short:"Journal/Planner", color:"#2b6cb0" },
+  { id:"b_1074812336010491887", name:"Gifts for Book Lovers",   short:"Book Gifts",      color:"#b7791f" },
 ];
 
 const DAY_SLOTS = {
@@ -65,7 +65,7 @@ function buildSeedPins(setId, boardIds, startDate, status, mediaUrl, link, descr
 }
 
 const SEED_SETS = [
-  {id:1,name:"Vintage Suitcases",      pins:buildSeedPins(1,["b_1074812336010491879","b_1074812336010491881","b_1074812336010491884","b_1074812336010491885"],"2025-05-01","live","","https://thymeandtonic.etsy.com","Vintage suitcase watercolor sticker cottagecore travel aesthetic","cottagecore,travel,vintage,sticker,watercolor")},
+  {id:1,name:"Vintage Suitcases",      pins:buildSeedPins(1,["b_1074812336010491879","b_1074812336010491881","b_1074812336010491884","b_1074812336010491885"],"2025-05-01","live","","https://thymeandtonic.etsy.com","Vintage suitcase watercolor sticker","cottagecore,travel,vintage,sticker,watercolor")},
   {id:2,name:"Book Dragon",            pins:buildSeedPins(2,["b_1074812336010491880","b_1074812336010491882","b_1074812336010491883","b_1074812336010491887"],"2025-05-10","live","","","","")},
   {id:3,name:"Reading Frog",           pins:buildSeedPins(3,["b_1074812336010491879","b_1074812336010491880","b_1074812336010491881","b_1074812336010491882"],"2025-05-20","live","","","","")},
   {id:4,name:"Raccoon with Headphones",pins:buildSeedPins(4,["b_1074812336010491883","b_1074812336010491884","b_1074812336010491885","b_1074812336010491887"],"2025-05-30","live","","","","")},
@@ -74,11 +74,11 @@ const SEED_SETS = [
   {id:7,name:"Meadow Mouse",           pins:buildSeedPins(7,["b_1074812336010491879","b_1074812336010491882","b_1074812336010491884","b_1074812336010491887"],"2025-07-01","live","","","","")},
   {id:8,name:"Bat Celestial Set",      pins:buildSeedPins(8,["b_1074812336010491880","b_1074812336010491881","b_1074812336010491882","b_1074812336010491883"],"2025-07-12","scheduled","","","Celestial bat watercolor sticker dark academia witchy aesthetic","darkacademia,celestial,bat,witchy,sticker")},
   {id:9,name:"Music Highland Cow",pins:[
-    {id:"9-0",boardId:"b_1074812336010491879",title:"Music Highland Cow Sticker · Watercolor Cottagecore Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"A watercolor highland cow strumming a guitar — this die-cut vinyl sticker is made for cottagecore lovers and music fans. Matte or glossy finish. Perfect for journals laptops and water bottles. Shop Thyme and Tonic Press on Etsy.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-12 11:36",status:"csv_ready"},
-    {id:"9-1",boardId:"b_1074812336010491881",title:"Cottagecore Highland Cow with Guitar · Watercolor Sticker",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Soft watercolor illustration of a fluffy highland cow with a guitar. This cottagecore-aesthetic vinyl sticker ships from Thyme and Tonic Press. Matte or glossy finish. Great for planners and journals.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-20 11:40",status:"csv_ready"},
-    {id:"9-2",boardId:"b_1074812336010491883",title:"Cute Musical Cow Sticker · Watercolor Animal Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Adorable musical highland cow vinyl die-cut sticker! Watercolor art style with a thick white border. Perfect for cute animal sticker collectors. Matte or glossy. Find it in the Thyme and Tonic Press Etsy shop.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-28 22:01",status:"csv_ready"},
-    {id:"9-3",boardId:"b_1074812336010491885",title:"Bookish Journal Sticker · Highland Cow Guitarist · Cottagecore",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Dress up your journal or planner with this watercolor highland cow guitarist sticker. Die-cut vinyl with white border. Matte or glossy finish. A cozy cottagecore touch for any sticker collection.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-07-06 22:52",status:"csv_ready"},
-    {id:"9-4",boardId:"b_1074812336010491884",title:"Watercolor Sticker Collection · Music Highland Cow Die-Cut Vinyl",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Add this watercolor highland cow with guitar to your sticker collection! Die-cut vinyl with crisp white border. Matte or glossy. From Thyme and Tonic Press — cottagecore and bookish sticker shop on Etsy.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-07-14 17:50",status:"csv_ready"},
+    {id:"9-0",boardId:"b_1074812336010491879",title:"Music Highland Cow Sticker · Watercolor Cottagecore Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"A watercolor highland cow strumming a guitar — this die-cut vinyl sticker is made for cottagecore lovers and music fans. Matte or glossy finish. Perfect for journals laptops and water bottles.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-12 11:36",status:"csv_ready"},
+    {id:"9-1",boardId:"b_1074812336010491881",title:"Cottagecore Highland Cow with Guitar · Watercolor Sticker",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Soft watercolor illustration of a fluffy highland cow with a guitar. This cottagecore-aesthetic vinyl sticker ships from Thyme and Tonic Press.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-20 11:40",status:"csv_ready"},
+    {id:"9-2",boardId:"b_1074812336010491883",title:"Cute Musical Cow Sticker · Watercolor Animal Vinyl Die-Cut",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Adorable musical highland cow vinyl die-cut sticker! Watercolor art style with a thick white border.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-06-28 22:01",status:"csv_ready"},
+    {id:"9-3",boardId:"b_1074812336010491885",title:"Bookish Journal Sticker · Highland Cow Guitarist · Cottagecore",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Dress up your journal or planner with this watercolor highland cow guitarist sticker.",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-07-06 22:52",status:"csv_ready"},
+    {id:"9-4",boardId:"b_1074812336010491884",title:"Watercolor Sticker Collection · Music Highland Cow Die-Cut Vinyl",mediaUrl:"",link:"https://www.etsy.com/listing/4520773459/music-highland-cow-sticker-cottagecore",description:"Add this watercolor highland cow with guitar to your sticker collection!",keywords:"cottagecore,highland cow,music sticker,watercolor sticker,vinyl sticker,animal sticker,cow sticker,guitar,die cut sticker,cute sticker",publishDate:"2026-07-14 17:50",status:"csv_ready"},
   ]},
 ];
 
@@ -89,13 +89,12 @@ function generateSchedule(boardIds,startDate,intervalDays){
   return boardIds.map((boardId,i)=>{
     const base=new Date((startDate||new Date().toISOString().slice(0,10))+"T00:00:00");
     base.setDate(base.getDate()+i*intervalDays);
-    const slots=DAY_SLOTS[base.getDay()]; const slot=slots[i%slots.length];
+    const slots=DAY_SLOTS[base.getDay()];const slot=slots[i%slots.length];
     return {id:`new-${Date.now()}-${i}`,boardId,title:"",mediaUrl:"",link:"",description:"",keywords:"",publishDate:fmt(base,slot),status:"csv_ready"};
   });
 }
 
 function csvCell(val){const s=String(val);if(s.includes(",")||s.includes('"')||s.includes("\n"))return`"${s.replace(/"/g,'""')}"`;return s;}
-
 function exportCSV(sets){
   const rows=[["Title","Media URL","Pinterest board","Thumbnail","Description","Link","Publish date","Keywords"]];
   sets.forEach(set=>(set.pins||[]).forEach(pin=>{
@@ -106,91 +105,101 @@ function exportCSV(sets){
   }));
   return rows.map(r=>r.join(",")).join("\n");
 }
-
 function downloadCSV(content,filename){
   const blob=new Blob([content],{type:"text/csv;charset=utf-8;"});
   const url=URL.createObjectURL(blob);const a=document.createElement("a");
   a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url);
 }
 
-function BoardCoverage({sets}){
-  const counts={};BOARDS.forEach(b=>counts[b.id]=0);
+// ── Calendar helpers ─────────────────────────────────────────────────────────
+function getDaysInMonth(year,month){return new Date(year,month+1,0).getDate();}
+function getFirstDayOfMonth(year,month){return new Date(year,month,1).getDay();}
+
+function getPinsForDate(sets, dateStr) {
+  const pins = [];
   sets.forEach(set=>(set.pins||[]).forEach(pin=>{
-    if(["live","scheduled","csv_ready"].includes(pin.status))counts[pin.boardId]=(counts[pin.boardId]||0)+1;
+    if(pin.publishDate && pin.publishDate.slice(0,10)===dateStr){
+      pins.push({...pin, setName:set.name, setId:set.id});
+    }
   }));
-  const max=Math.max(...Object.values(counts),1);
+  return pins;
+}
+
+const MONTH_NAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DAY_NAMES=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+// ── Pin Tag (on calendar) ────────────────────────────────────────────────────
+function PinTag({pin, onClick}){
+  const board=boardById(pin.boardId);
+  const st=statusObj(pin.status);
   return (
-    <div style={{background:"#faf7f2",borderRadius:12,padding:"14px 18px",marginBottom:20,border:"1px solid #e8e0d5"}}>
-      <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.06em",textTransform:"uppercase",marginBottom:10}}>Board Coverage · Active Pins</div>
-      <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:6}}>
-        {BOARDS.map(b=>{
-          const count=counts[b.id]||0;const intensity=count===0?0:Math.min(count/max,1);
-          const bg=count===0?"#f0ebe3":`rgba(94,76,55,${0.15+intensity*0.65})`;const tc=intensity>0.5?"#fff":"#5e4c37";
-          return <div key={b.id} style={{background:bg,borderRadius:8,padding:"7px 8px",textAlign:"center"}}>
-            <div style={{fontSize:10,fontWeight:600,color:tc,lineHeight:1.3}}>{b.short}</div>
-            <div style={{fontSize:17,fontWeight:700,color:tc,marginTop:1}}>{count}</div>
-          </div>;
-        })}
-      </div>
+    <div onClick={e=>{e.stopPropagation();onClick(pin);}}
+      style={{background:board?board.color:"#888",color:"#fff",borderRadius:4,padding:"2px 5px",fontSize:9,fontWeight:700,marginBottom:2,cursor:"pointer",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",opacity:pin.status==="live"?0.6:1,position:"relative"}}>
+      {pin.status==="live"&&<span style={{marginRight:3}}>✓</span>}
+      {pin.setName}
+      <span style={{opacity:0.75,marginLeft:3}}>· {board?.short}</span>
     </div>
   );
 }
 
-function PinRow({pin,onStatusChange}){
-  const board=boardById(pin.boardId);const st=statusObj(pin.status);
+// ── Day Cell ─────────────────────────────────────────────────────────────────
+function DayCell({day, year, month, pins, isToday, onPinClick, onDayClick}){
   const [hov,setHov]=useState(false);
-  const mediaOk=pin.mediaUrl&&!pin.mediaUrl.includes("⚠");
+  const hasPins=pins.length>0;
+  const MAX_SHOW=3;
+  const extra=pins.length-MAX_SHOW;
   return (
-    <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1.2fr 1.5fr 90px",gap:10,alignItems:"center",padding:"8px 14px",borderBottom:"1px solid #f5efe8",background:hov?"#fdf9f5":"#fff",fontSize:12}}
-      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}>
-      <div style={{color:"#3d2f1e",fontWeight:500}}>{board?.short||pin.boardId}</div>
-      <div><span style={{display:"inline-block",padding:"2px 8px",borderRadius:20,background:st.bg,color:st.color,fontSize:10,fontWeight:700,border:`1px solid ${st.color}33`}}>{st.label}</span></div>
-      <div style={{color:"#9e8c78",fontSize:11}}>{pin.publishDate||"—"}</div>
-      <div style={{color:mediaOk?"#276749":"#c05621",fontSize:10,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{mediaOk?"✓ Media set":"⚠ No media"}</div>
-      <select value={pin.status} onChange={e=>onStatusChange(pin.id,e.target.value)}
-        style={{fontSize:10,padding:"2px 4px",borderRadius:6,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#5e4c37",cursor:"pointer",width:"100%"}}>
-        {STATUSES.map(s=><option key={s.key} value={s.key}>{s.label}</option>)}
-      </select>
+    <div onClick={()=>onDayClick&&onDayClick(day)}
+      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+      style={{minHeight:90,background:hov?"#f5efe8":hasPins?"#fdfaf6":"#fff",border:`1px solid ${isToday?"#8b6b45":"#ede5d8"}`,borderRadius:8,padding:"6px 7px",cursor:"pointer",transition:"background 0.1s",position:"relative"}}>
+      <div style={{fontSize:11,fontWeight:isToday?800:500,color:isToday?"#5e4c37":"#9e8c78",marginBottom:4,width:20,height:20,borderRadius:10,background:isToday?"#e8dcc8":"transparent",display:"flex",alignItems:"center",justifyContent:"center"}}>{day}</div>
+      {pins.slice(0,MAX_SHOW).map((pin,i)=><PinTag key={i} pin={pin} onClick={onPinClick}/>)}
+      {extra>0&&<div style={{fontSize:9,color:"#a0896e",fontWeight:700,marginTop:1}}>+{extra} more</div>}
     </div>
   );
 }
 
-function SetCard({set,onEdit,onDelete,onPinStatusChange,onExportSingle}){
-  const [expanded,setExpanded]=useState(false);
-  const allStatuses=set.pins.map(p=>p.status);
-  const dominant=STATUSES.slice().reverse().find(s=>allStatuses.includes(s.key))||STATUSES[0];
-  const readyCount=set.pins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
-  const liveCount=set.pins.filter(p=>p.status==="live").length;
+// ── Pin Detail Modal ─────────────────────────────────────────────────────────
+function PinDetailModal({pin, sets, onStatusChange, onClose}){
+  const board=boardById(pin.boardId);
+  const st=statusObj(pin.status);
+  const set=sets.find(s=>s.id===pin.setId);
   return (
-    <div style={{border:"1px solid #e8e0d5",borderRadius:12,overflow:"hidden",marginBottom:10,background:"#fff"}}>
-      <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr auto",gap:10,alignItems:"center",padding:"12px 16px",cursor:"pointer",background:"#faf7f2"}}
-        onClick={()=>setExpanded(e=>!e)}>
-        <div>
-          <div style={{fontWeight:700,fontSize:14,color:"#3d2f1e"}}>{set.name}</div>
-          <div style={{fontSize:11,color:"#a0896e",marginTop:2}}>{set.pins.length} pins · {liveCount} live · {readyCount} ready</div>
-        </div>
-        <div><span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:dominant.bg,color:dominant.color,fontSize:11,fontWeight:700,border:`1px solid ${dominant.color}33`}}>{dominant.label}</span></div>
-        <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins[0]?.publishDate?`First: ${set.pins[0].publishDate.slice(0,10)}`:"No dates"}</div>
-        <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins.length>0&&set.pins[set.pins.length-1]?.publishDate?`Last: ${set.pins[set.pins.length-1].publishDate.slice(0,10)}`:""}</div>
-        <div style={{display:"flex",gap:6,alignItems:"center"}}>
-          {readyCount>0&&<button onClick={e=>{e.stopPropagation();onExportSingle(set);}} style={{padding:"4px 10px",borderRadius:6,border:"none",background:"#276749",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>↓ CSV</button>}
-          <button onClick={e=>{e.stopPropagation();onEdit(set);}} style={{padding:"4px 10px",borderRadius:6,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontSize:11,cursor:"pointer"}}>Edit</button>
-          <button onClick={e=>{e.stopPropagation();onDelete(set.id);}} style={{padding:"4px 8px",borderRadius:6,border:"1px solid #fed7d7",background:"#fff5f5",color:"#c53030",fontSize:11,cursor:"pointer"}}>✕</button>
-          <span style={{color:"#c4b5a0",fontSize:13}}>{expanded?"▲":"▼"}</span>
-        </div>
-      </div>
-      {expanded&&(
-        <div>
-          <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1.2fr 1.5fr 90px",gap:10,padding:"6px 14px",background:"#f5efe8",borderTop:"1px solid #e8e0d5"}}>
-            {["Board","Status","Publish Date","Media","Change"].map((h,i)=><div key={i} style={{fontSize:10,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.06em",textTransform:"uppercase"}}>{h}</div>)}
+    <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.45)",zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}}
+      onClick={e=>e.target===e.currentTarget&&onClose()}>
+      <div style={{background:"#fff",borderRadius:16,padding:28,width:460,boxShadow:"0 20px 60px rgba(0,0,0,0.2)"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:16}}>
+          <div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:18,color:"#3d2f1e",lineHeight:1.3}}>{pin.setName}</div>
+            <div style={{fontSize:12,color:"#9e8c78",marginTop:3}}>{pin.publishDate}</div>
           </div>
-          {set.pins.map(pin=><PinRow key={pin.id} pin={pin} onStatusChange={(pid,s)=>onPinStatusChange(set.id,pid,s)}/>)}
+          <button onClick={onClose} style={{background:"none",border:"none",fontSize:20,color:"#c4b5a0",cursor:"pointer",lineHeight:1}}>×</button>
         </div>
-      )}
+        <div style={{display:"flex",gap:8,marginBottom:16,flexWrap:"wrap"}}>
+          <span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:board?board.color+"22":"#eee",color:board?board.color:"#888",fontSize:11,fontWeight:700,border:`1px solid ${board?board.color+"44":"#ccc"}`}}>{board?.name}</span>
+          <span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:st.bg,color:st.color,fontSize:11,fontWeight:700,border:`1px solid ${st.color}33`}}>{st.label}</span>
+        </div>
+        {pin.title&&<div style={{fontSize:12,color:"#5e4c37",marginBottom:8,fontWeight:600}}>{pin.title}</div>}
+        {pin.description&&<div style={{fontSize:12,color:"#7c6f5e",marginBottom:12,lineHeight:1.5}}>{pin.description}</div>}
+        {pin.link&&<div style={{marginBottom:12}}><a href={pin.link} target="_blank" rel="noreferrer" style={{fontSize:12,color:"#3182ce"}}>→ Etsy listing</a></div>}
+        <div style={{marginBottom:16}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#7c6f5e",textTransform:"uppercase",letterSpacing:"0.05em",marginBottom:6}}>Update Status</div>
+          <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+            {STATUSES.map(s=>(
+              <button key={s.key} onClick={()=>{onStatusChange(pin.setId,pin.id,s.key);onClose();}}
+                style={{padding:"4px 12px",borderRadius:20,border:`2px solid ${pin.status===s.key?s.color:"#e8e0d5"}`,background:pin.status===s.key?s.bg:"#fff",color:s.color,fontSize:11,fontWeight:700,cursor:"pointer"}}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div style={{fontSize:11,color:"#c4b5a0",textAlign:"right"}}>Part of "{pin.setName}" · {set?.pins?.length} pins total</div>
+      </div>
     </div>
   );
 }
 
+// ── Set Modal (add/edit) ─────────────────────────────────────────────────────
 const L=({children})=><label style={{display:"block",fontSize:11,fontWeight:700,color:"#7c6f5e",letterSpacing:"0.05em",textTransform:"uppercase",marginBottom:5,marginTop:14}}>{children}</label>;
 const IS={width:"100%",padding:"8px 12px",borderRadius:8,border:"1px solid #d4c4b0",background:"#faf7f2",color:"#3d2f1e",fontSize:13,boxSizing:"border-box",outline:"none"};
 
@@ -225,9 +234,9 @@ function SetModal({set,onSave,onClose}){
         <L>Boards ({selectedBoards.length}/8)</L>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6}}>
           {BOARDS.map(b=>(
-            <label key={b.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:8,background:selectedBoards.includes(b.id)?"#f0ebe3":"#faf7f2",cursor:"pointer",border:`1px solid ${selectedBoards.includes(b.id)?"#c4a882":"#e8e0d5"}`}}>
-              <input type="checkbox" checked={selectedBoards.includes(b.id)} onChange={()=>toggleBoard(b.id)} style={{accentColor:"#8b6b45"}}/>
-              <span style={{fontSize:12,color:"#5e4c37",fontWeight:selectedBoards.includes(b.id)?700:400}}>{b.short}</span>
+            <label key={b.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 10px",borderRadius:8,background:selectedBoards.includes(b.id)?b.color+"18":"#faf7f2",cursor:"pointer",border:`1.5px solid ${selectedBoards.includes(b.id)?b.color:"#e8e0d5"}`}}>
+              <input type="checkbox" checked={selectedBoards.includes(b.id)} onChange={()=>toggleBoard(b.id)} style={{accentColor:b.color}}/>
+              <span style={{fontSize:12,color:selectedBoards.includes(b.id)?b.color:"#5e4c37",fontWeight:selectedBoards.includes(b.id)?700:400}}>{b.short}</span>
             </label>
           ))}
         </div>
@@ -245,8 +254,12 @@ function SetModal({set,onSave,onClose}){
             {selectedBoards.map((bid,i)=>{
               const base=new Date(startDate+"T00:00:00");base.setDate(base.getDate()+i*interval);
               const slots=DAY_SLOTS[base.getDay()];const slot=slots[i%slots.length];const board=boardById(bid);
-              return <div key={bid} style={{display:"flex",justifyContent:"space-between",fontSize:11,color:"#5e4c37",padding:"3px 0",borderBottom:i<selectedBoards.length-1?"1px dashed #e8e0d5":"none"}}>
-                <span>📌 {board?.short}</span><span style={{color:"#9e8c78"}}>{fmt(base,slot)}</span>
+              return <div key={bid} style={{display:"flex",justifyContent:"space-between",alignItems:"center",fontSize:11,color:"#5e4c37",padding:"3px 0",borderBottom:i<selectedBoards.length-1?"1px dashed #e8e0d5":"none"}}>
+                <span style={{display:"flex",alignItems:"center",gap:6}}>
+                  <span style={{width:8,height:8,borderRadius:4,background:board?.color,display:"inline-block"}}></span>
+                  {board?.short}
+                </span>
+                <span style={{color:"#9e8c78"}}>{fmt(base,slot)}</span>
               </div>;
             })}
           </div>
@@ -260,21 +273,69 @@ function SetModal({set,onSave,onClose}){
   );
 }
 
-function Pill({label,active,color,onClick}){
-  return <button onClick={onClick} style={{padding:"5px 14px",borderRadius:20,border:`2px solid ${active?color:"#d4c4b0"}`,background:active?color:"#fff",color:active?"#fff":color,fontSize:12,fontWeight:700,cursor:"pointer"}}>{label}</button>;
+// ── List View ────────────────────────────────────────────────────────────────
+function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle}){
+  return (
+    <div>
+      {sets.map(set=>{
+        const allStatuses=set.pins.map(p=>p.status);
+        const dominant=STATUSES.slice().reverse().find(s=>allStatuses.includes(s.key))||STATUSES[0];
+        const readyCount=set.pins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
+        const liveCount=set.pins.filter(p=>p.status==="live").length;
+        return (
+          <div key={set.id} style={{border:"1px solid #e8e0d5",borderRadius:12,overflow:"hidden",marginBottom:10,background:"#fff"}}>
+            <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr auto",gap:10,alignItems:"center",padding:"12px 16px",background:"#faf7f2"}}>
+              <div>
+                <div style={{fontWeight:700,fontSize:14,color:"#3d2f1e"}}>{set.name}</div>
+                <div style={{fontSize:11,color:"#a0896e",marginTop:2,display:"flex",gap:6,flexWrap:"wrap"}}>
+                  {set.pins.map(p=>{const b=boardById(p.boardId);return b?<span key={p.id} style={{display:"inline-block",width:8,height:8,borderRadius:4,background:b.color,opacity:p.status==="live"?0.4:1}} title={b.short}></span>:null;})}
+                </div>
+              </div>
+              <div><span style={{display:"inline-block",padding:"3px 10px",borderRadius:20,background:dominant.bg,color:dominant.color,fontSize:11,fontWeight:700,border:`1px solid ${dominant.color}33`}}>{dominant.label}</span></div>
+              <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins.length} pins · {liveCount} live · {readyCount} ready</div>
+              <div style={{fontSize:11,color:"#9e8c78"}}>{set.pins[0]?.publishDate?`${set.pins[0].publishDate.slice(0,10)}`:"No dates"}</div>
+              <div style={{display:"flex",gap:6,alignItems:"center"}}>
+                {readyCount>0&&<button onClick={()=>onExportSingle(set)} style={{padding:"4px 10px",borderRadius:6,border:"none",background:"#276749",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>↓ CSV</button>}
+                <button onClick={()=>onEdit(set)} style={{padding:"4px 10px",borderRadius:6,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontSize:11,cursor:"pointer"}}>Edit</button>
+                <button onClick={()=>onDelete(set.id)} style={{padding:"4px 8px",borderRadius:6,border:"1px solid #fed7d7",background:"#fff5f5",color:"#c53030",fontSize:11,cursor:"pointer"}}>✕</button>
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
+// ── Board Legend ─────────────────────────────────────────────────────────────
+function BoardLegend(){
+  return (
+    <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
+      {BOARDS.map(b=>(
+        <div key={b.id} style={{display:"flex",alignItems:"center",gap:5,fontSize:11,color:"#5e4c37"}}>
+          <span style={{width:10,height:10,borderRadius:3,background:b.color,display:"inline-block",flexShrink:0}}></span>
+          {b.short}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Main App ─────────────────────────────────────────────────────────────────
 function App(){
   const [sets,setSets]=useState([]);
-  const [filterStatus,setFilterStatus]=useState("all");
+  const [view,setView]=useState("calendar"); // "calendar" | "list"
   const [modalSet,setModalSet]=useState(null);
+  const [selectedPin,setSelectedPin]=useState(null);
   const [nextId,setNextId]=useState(200);
+  const today=new Date();
+  const [calYear,setCalYear]=useState(today.getFullYear());
+  const [calMonth,setCalMonth]=useState(today.getMonth());
 
   useEffect(()=>{
     try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const p=JSON.parse(saved);setSets(p.sets||SEED_SETS);setNextId(p.nextId||200);}else setSets(SEED_SETS);}
     catch{setSets(SEED_SETS);}
   },[]);
-
   useEffect(()=>{
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify({sets,nextId}));}catch{}
   },[sets,nextId]);
@@ -291,37 +352,85 @@ function App(){
 
   const allPins=sets.flatMap(s=>s.pins||[]);
   const readyCount=allPins.filter(p=>["csv_ready","scheduled"].includes(p.status)).length;
-  const filtered=filterStatus==="all"?sets:sets.filter(s=>s.pins.some(p=>p.status===filterStatus));
-  const statusCounts={};STATUSES.forEach(s=>statusCounts[s.key]=allPins.filter(p=>p.status===s.key).length);
+
+  // Calendar grid
+  const daysInMonth=getDaysInMonth(calYear,calMonth);
+  const firstDay=getFirstDayOfMonth(calYear,calMonth);
+  const todayStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+
+  function prevMonth(){if(calMonth===0){setCalMonth(11);setCalYear(y=>y-1);}else setCalMonth(m=>m-1);}
+  function nextMonth(){if(calMonth===11){setCalMonth(0);setCalYear(y=>y+1);}else setCalMonth(m=>m+1);}
 
   return (
-    <div style={{fontFamily:"'Inter',system-ui,sans-serif",background:"#fdf9f4",minHeight:"100vh",padding:"24px 20px"}}>
-      <div style={{maxWidth:980,margin:"0 auto"}}>
-        <div style={{display:"flex",alignItems:"flex-end",justifyContent:"space-between",marginBottom:16,flexWrap:"wrap",gap:10}}>
+    <div style={{background:"#fdf9f4",minHeight:"100vh",padding:"20px 20px"}}>
+      <div style={{maxWidth:1100,margin:"0 auto"}}>
+
+        {/* Header */}
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:20,flexWrap:"wrap",gap:10}}>
           <div>
-            <div style={{fontFamily:"Georgia,serif",fontSize:26,color:"#3d2f1e",fontWeight:400}}>🌿 Pinterest Publish Tracker</div>
-            <div style={{fontSize:13,color:"#a0896e",marginTop:3}}>Thyme &amp; Tonic Press · Pinterest Native CSV</div>
+            <div style={{fontFamily:"Georgia,serif",fontSize:24,color:"#3d2f1e",fontWeight:400}}>🌿 Pinterest Publish Tracker</div>
+            <div style={{fontSize:12,color:"#a0896e",marginTop:2}}>Thyme &amp; Tonic Press</div>
           </div>
-          <div style={{display:"flex",gap:8,flexWrap:"wrap"}}>
-            {readyCount>0&&<button onClick={handleExportAll} style={{padding:"10px 16px",borderRadius:10,border:"none",background:"#276749",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>↓ Export All Ready ({readyCount})</button>}
-            <button onClick={()=>setModalSet({name:"",pins:[]})} style={{padding:"10px 18px",borderRadius:10,border:"none",background:"#5e4c37",color:"#fff",fontWeight:700,fontSize:13,cursor:"pointer"}}>+ New Pin Set</button>
+          <div style={{display:"flex",gap:8,alignItems:"center",flexWrap:"wrap"}}>
+            {readyCount>0&&<button onClick={handleExportAll} style={{padding:"8px 14px",borderRadius:9,border:"none",background:"#276749",color:"#fff",fontWeight:700,fontSize:12,cursor:"pointer"}}>↓ Export All Ready ({readyCount})</button>}
+            <button onClick={()=>setModalSet({name:"",pins:[]})} style={{padding:"8px 16px",borderRadius:9,border:"none",background:"#5e4c37",color:"#fff",fontWeight:700,fontSize:12,cursor:"pointer"}}>+ New Pin Set</button>
+            <div style={{display:"flex",borderRadius:8,overflow:"hidden",border:"1px solid #d4c4b0"}}>
+              <button onClick={()=>setView("calendar")} style={{padding:"7px 14px",border:"none",background:view==="calendar"?"#5e4c37":"#fff",color:view==="calendar"?"#fff":"#5e4c37",fontWeight:700,fontSize:12,cursor:"pointer"}}>📅 Calendar</button>
+              <button onClick={()=>setView("list")} style={{padding:"7px 14px",border:"none",background:view==="list"?"#5e4c37":"#fff",color:view==="list"?"#fff":"#5e4c37",fontWeight:700,fontSize:12,cursor:"pointer"}}>☰ List</button>
+            </div>
           </div>
         </div>
-        <div style={{background:"#ebf8ff",border:"1px solid #bee3f8",borderRadius:10,padding:"10px 14px",marginBottom:16,fontSize:12,color:"#2b6cb0"}}>
-          📋 Exports use <strong>Pinterest's native bulk upload CSV</strong>: Title · Media URL · Pinterest board · Thumbnail · Description · Link · Publish date · Keywords
-        </div>
-        <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:16}}>
-          <Pill label={`All (${sets.length})`} active={filterStatus==="all"} color="#5e4c37" onClick={()=>setFilterStatus("all")}/>
-          {STATUSES.map(s=><Pill key={s.key} label={`${s.label}${statusCounts[s.key]>0?` (${statusCounts[s.key]})`:""}`} active={filterStatus===s.key} color={s.color} onClick={()=>setFilterStatus(s.key)}/>)}
-        </div>
-        <BoardCoverage sets={sets}/>
-        {filtered.length===0
-          ?<div style={{textAlign:"center",padding:48,color:"#c4b5a0",fontSize:14}}>No pin sets match this filter.</div>
-          :filtered.map(set=><SetCard key={set.id} set={set} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle}/>)
-        }
-        <div style={{marginTop:12,fontSize:11,color:"#c4b5a0",textAlign:"right"}}>{sets.length} pin sets · {allPins.length} total pins · data saved to browser</div>
+
+        {view==="calendar"&&(
+          <>
+            {/* Month nav */}
+            <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:12}}>
+              <button onClick={prevMonth} style={{padding:"6px 14px",borderRadius:8,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontWeight:700,fontSize:14,cursor:"pointer"}}>‹</button>
+              <div style={{fontFamily:"Georgia,serif",fontSize:20,color:"#3d2f1e",fontWeight:400}}>{MONTH_NAMES[calMonth]} {calYear}</div>
+              <button onClick={nextMonth} style={{padding:"6px 14px",borderRadius:8,border:"1px solid #d4c4b0",background:"#fff",color:"#5e4c37",fontWeight:700,fontSize:14,cursor:"pointer"}}>›</button>
+            </div>
+
+            {/* Legend */}
+            <BoardLegend/>
+
+            {/* Day headers */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4,marginBottom:4}}>
+              {DAY_NAMES.map(d=><div key={d} style={{textAlign:"center",fontSize:11,fontWeight:700,color:"#a0896e",letterSpacing:"0.05em",padding:"4px 0"}}>{d}</div>)}
+            </div>
+
+            {/* Calendar grid */}
+            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
+              {Array.from({length:firstDay}).map((_,i)=><div key={`e${i}`}/>)}
+              {Array.from({length:daysInMonth}).map((_,i)=>{
+                const day=i+1;
+                const dateStr=`${calYear}-${String(calMonth+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+                const pins=getPinsForDate(sets,dateStr);
+                const isToday=dateStr===todayStr;
+                return <DayCell key={day} day={day} year={calYear} month={calMonth} pins={pins} isToday={isToday} onPinClick={setSelectedPin}/>;
+              })}
+            </div>
+
+            {/* Status key */}
+            <div style={{display:"flex",gap:12,marginTop:16,flexWrap:"wrap"}}>
+              <div style={{fontSize:11,color:"#9e8c78",fontStyle:"italic"}}>Click any pin tag to view details or update status</div>
+              <div style={{display:"flex",gap:10,marginLeft:"auto"}}>
+                {STATUSES.map(s=><div key={s.key} style={{display:"flex",alignItems:"center",gap:4,fontSize:11,color:"#7c6f5e"}}>
+                  <span style={{width:8,height:8,borderRadius:2,background:s.color,display:"inline-block"}}></span>{s.label}
+                </div>)}
+              </div>
+            </div>
+          </>
+        )}
+
+        {view==="list"&&(
+          <ListView sets={sets} onEdit={s=>setModalSet(s)} onDelete={handleDelete} onPinStatusChange={handlePinStatusChange} onExportSingle={handleExportSingle}/>
+        )}
+
+        <div style={{marginTop:16,fontSize:11,color:"#c4b5a0",textAlign:"right"}}>{sets.length} pin sets · {allPins.length} total pins · data saved to browser</div>
       </div>
+
       {modalSet&&<SetModal set={modalSet} onSave={handleSave} onClose={()=>setModalSet(null)}/>}
+      {selectedPin&&<PinDetailModal pin={selectedPin} sets={sets} onStatusChange={(sid,pid,s)=>{handlePinStatusChange(sid,pid,s);setSelectedPin(null);}} onClose={()=>setSelectedPin(null)}/>}
     </div>
   );
 }
