@@ -307,7 +307,10 @@ function ListingPanel({set, onClose, onSaveSet, onExportSingle}){
         <div style={{padding:"20px 24px 16px",borderBottom:"1px solid #e8e0d5",background:"#fff",position:"sticky",top:0,zIndex:10}}>
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
             <div style={{flex:1,marginRight:12}}>
+              <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:4}}>
+              <EtsyThumb set={localSet} size={56}/>
               <div style={{fontFamily:"Georgia,serif",fontSize:19,color:"#3d2f1e",lineHeight:1.3}}>{localSet.name}</div>
+            </div>
               {localSet.pins[0]?.link&&(
                 <a href={localSet.pins[0].link} target="_blank" rel="noreferrer" style={{fontSize:11,color:"#3182ce",marginTop:3,display:"block"}}>→ Etsy listing</a>
               )}
@@ -487,6 +490,45 @@ function SetModal({set,onSave,onClose}){
 }
 
 // ── List View ────────────────────────────────────────────────────────────────
+// ── Etsy Thumbnail (auto-fetches og:image if no stickerImageUrl) ─────────────
+const thumbCache = {};
+function EtsyThumb({set, size=44}){
+  const [url, setUrl] = useState(set.stickerImageUrl || thumbCache[set.id] || "");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(()=>{
+    if(url) return;
+    if(!set.pins?.[0]?.link) return;
+    if(thumbCache[set.id]){ setUrl(thumbCache[set.id]); return; }
+    setLoading(true);
+    const listingUrl = set.pins[0].link;
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(listingUrl)}`;
+    fetch(proxyUrl)
+      .then(r=>r.json())
+      .then(data=>{
+        const match = data.contents?.match(/<meta property="og:image" content="([^"]+)"/);
+        if(match){
+          const imgUrl = match[1];
+          thumbCache[set.id] = imgUrl;
+          setUrl(imgUrl);
+        }
+      })
+      .catch(()=>{})
+      .finally(()=>setLoading(false));
+  },[set.id]);
+
+  return (
+    <div style={{width:size,height:size,borderRadius:8,border:"1px solid #e8e0d5",background:"#f5efe8",overflow:"hidden",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
+      {url
+        ? <img src={url} alt={set.name} style={{width:"100%",height:"100%",objectFit:"cover"}} onError={e=>{e.target.style.display='none';}}/>
+        : loading
+          ? <span style={{fontSize:10,color:"#c4b5a0"}}>···</span>
+          : <span style={{fontSize:size>40?18:12}}>🌿</span>
+      }
+    </div>
+  );
+}
+
 function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle, onOpenDetail}){
   return (
     <div>
@@ -501,11 +543,7 @@ function ListView({sets, onEdit, onDelete, onPinStatusChange, onExportSingle, on
             onClick={()=>onOpenDetail(set)}>
             <div style={{display:"grid",gridTemplateColumns:"auto 2fr 1fr 1fr 1fr auto",gap:10,alignItems:"center",padding:"10px 14px",background:"#faf7f2"}}>
               {/* Sticker thumb */}
-              <div style={{width:44,height:44,borderRadius:8,border:"1px solid #e8e0d5",background:"#f5efe8",overflow:"hidden",flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center"}}>
-                {hasImage
-                  ?<img src={set.stickerImageUrl} alt="" style={{width:"100%",height:"100%",objectFit:"contain"}} onError={e=>e.target.style.display='none'}/>
-                  :<span style={{fontSize:18}}>🌿</span>}
-              </div>
+              <EtsyThumb set={set} size={44}/>
               <div>
                 <div style={{fontWeight:700,fontSize:13,color:"#3d2f1e"}}>{set.name}</div>
                 <div style={{fontSize:10,color:"#a0896e",marginTop:2,display:"flex",gap:5,flexWrap:"wrap"}}>
