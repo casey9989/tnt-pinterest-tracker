@@ -194,7 +194,7 @@ function PinTag({pin, onClick}){
   const st=statusObj(pin.status);
   return (
     <div onClick={e=>{e.stopPropagation();onClick(pin);}}
-      style={{background:board?board.color:"#888",color:"#fff",borderRadius:4,padding:"2px 5px",fontSize:9,fontWeight:700,marginBottom:2,cursor:"pointer",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",opacity:pin.status==="live"?0.6:1,position:"relative"}}>
+      style={{background:board?board.color:"#888",color:"#fff",borderRadius:4,padding:"2px 5px",fontSize:9,fontWeight:700,marginBottom:2,cursor:"pointer",lineHeight:1.3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",opacity:pin.status==="live"?0.6:1,position:"relative",display:"block",width:"100%",boxSizing:"border-box"}}>
       {pin.status==="live"&&<span style={{marginRight:3}}>✓</span>}
       {pin.setName}
       <span style={{opacity:0.75,marginLeft:3}}>· {board?.short}</span>
@@ -211,7 +211,7 @@ function DayCell({day, year, month, pins, isToday, onPinClick, onDayClick}){
   return (
     <div onClick={()=>onDayClick&&onDayClick(day)}
       onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
-      style={{minHeight:90,background:hov?"#f5efe8":hasPins?"#fdfaf6":"#fff",border:`1px solid ${isToday?"#8b6b45":"#ede5d8"}`,borderRadius:8,padding:"6px 7px",cursor:"pointer",transition:"background 0.1s",position:"relative"}}>
+      style={{minHeight:90,minWidth:0,overflow:"hidden",background:hov?"#f5efe8":hasPins?"#fdfaf6":"#fff",border:`1px solid ${isToday?"#8b6b45":"#ede5d8"}`,borderRadius:8,padding:"6px 7px",cursor:"pointer",transition:"background 0.1s",position:"relative"}}>
       <div style={{fontSize:11,fontWeight:isToday?800:500,color:isToday?"#5e4c37":"#9e8c78",marginBottom:4,width:20,height:20,borderRadius:10,background:isToday?"#e8dcc8":"transparent",display:"flex",alignItems:"center",justifyContent:"center"}}>{day}</div>
       {pins.slice(0,MAX_SHOW).map((pin,i)=><PinTag key={i} pin={pin} onClick={onPinClick}/>)}
       {extra>0&&<div style={{fontSize:9,color:"#a0896e",fontWeight:700,marginTop:1}}>+{extra} more</div>}
@@ -645,7 +645,7 @@ function App(){
             <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4,marginBottom:4}}>
               {DAY_NAMES.map(d=><div key={d} style={{textAlign:"center",fontSize:11,fontWeight:700,color:"#a0896e",letterSpacing:"0.05em",padding:"4px 0"}}>{d}</div>)}
             </div>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4,alignItems:"start"}}>
               {Array.from({length:firstDay}).map((_,i)=><div key={`e${i}`}/>)}
               {Array.from({length:daysInMonth}).map((_,i)=>{
                 const day=i+1;
