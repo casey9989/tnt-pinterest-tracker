@@ -561,8 +561,12 @@ function App(){
   const [calMonth,setCalMonth]=useState(today.getMonth());
 
   useEffect(()=>{
-    try{const saved=localStorage.getItem(STORAGE_KEY);if(saved){const p=JSON.parse(saved);setSets(p.sets||SEED_SETS);setNextId(p.nextId||300);}else setSets(SEED_SETS);}
-    catch{setSets(SEED_SETS);}
+    // Always load fresh from seeds.json (the source of truth). Local edits
+    // made in-browser (status changes etc) are kept for THIS session only
+    // via the save effect below, but a hard refresh always re-syncs to
+    // the latest server data so updates pushed by Claude are never stale.
+    setSets(SEED_SETS);
+    setNextId(300);
   },[]);
   useEffect(()=>{
     try{localStorage.setItem(STORAGE_KEY,JSON.stringify({sets,nextId}));}catch{}
